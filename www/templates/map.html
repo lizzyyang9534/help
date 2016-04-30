@@ -1,0 +1,16 @@
+<ion-view view-title="HELP OTHERS">
+	<ion-content>
+		<ion-pane>
+			<div ng-controller="MapCtrl">
+				<ion-content ng-init="initialize()">
+					<div id="map" data-tap-disabled="true"></div>
+				</ion-content>
+				<button class="button button-fab button-fab-bottom-left ink-dark button-calm icon ion-android-refresh" ng-click="doRefresh()"></button>
+			</div>
+		</ion-pane>
+
+		<!--<ion-footer-bar class="bar-dark" ng-controller="MapTest" ng-init="initialize()">
+			<a ng-click="centerOnMe()" class="button button-icon icon ion-navigate">Find Me</a>
+		</ion-footer-bar>-->
+	</ion-content>
+</ion-view>

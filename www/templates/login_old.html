@@ -1,0 +1,28 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-calm">
+    <h1 class="title">會員登入</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeLogin()">
+        <i class="ion-close-round margin-right-10 text-align-center"></i>
+      </button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form name="login_form">
+      <div class="list margin-top-10">
+        <label class="item item-input">
+          <i class="icon ion-android-contact margin-right-10 text-align-center"></i>
+          <span class="input-label">帳號</span>
+          <input type="text" name="username" ng-model="loginData.username" required>
+        </label>
+        <label class="item item-input">
+          <i class="icon ion-locked margin-right-10 text-align-center"></i>
+          <span class="input-label">密碼</span>
+          <input type="password" name="password" ng-model="loginData.password" required>
+        </label>
+        <input type="button" value="登入" class="button button-calm home_button margin-top-30" ng-click="doLogin(login_form)">
+        <input type="button" value="忘記密碼" class="button button-calm home_button" ng-click="forgetPassword()">
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

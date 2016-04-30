@@ -1,0 +1,22 @@
+<ion-view>
+  <ion-header-bar class="bar-calm">
+    <h1 class="title">提供對方聯絡資料</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeContact_ch()">
+	  <i class="ion-close-round margin-right-10 text-align-center"></i>
+	  </button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <div ng-controller="AppCtrl">
+    <form name="contactChoose_form">
+      <ion-list required>
+        <ion-checkbox ng-model="cel">手機</ion-checkbox>
+        <ion-checkbox ng-model="email">E-mail</ion-checkbox>
+        <ion-checkbox ng-model="line">LineID</ion-checkbox>
+      </ion-list>
+      <input type="button" value="submit" class="button button-calm home_button margin-top-15" ng-click="addincident()">
+    </form>
+    </div>
+  </ion-content>
+</ion-view>

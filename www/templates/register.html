@@ -1,0 +1,92 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-calm">
+    <h1 class="title">會員註冊</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeRegister()">
+        <i class="ion-close-round margin-right-10 text-align-center"></i>
+      </button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <div ng-controller="RegisterCtrl">
+      <form name="register_form">
+        <div class="list">
+          <div class="item item-divider margin-0 font-size-18 border-bottom-11c1f3">基本資料</div>
+          <label class="item item-input">
+            <i class="icon ion-android-contact margin-right-10 text-align-center"></i>
+            <span class="input-label">帳號*</span>
+            <input type="text" id="account" name="account" ng-model="account" placeholder="帳號" required>
+          </label>
+          <label class="item item-input">
+            <i class="icon ion-locked margin-right-10 text-align-center"></i>
+            <span class="input-label">密碼*</span>
+            <input type="password" id="passwd" name="passwd" ng-model="passwd" pw-account-check="account" placeholder="密碼" required ng-minlength="8" ng-maxlength="20">
+          </label>
+          <label class="item item-input">
+            <i class="icon ion-checkmark-circled margin-right-10 text-align-center"></i>
+            <span class="input-label">確認密碼*</span>
+            <input type="password" name="passwd_check" ng-model="passwd_check" pw-check="passwd" placeholder="請再輸入一次密碼">
+          </label>
+          <label class="item item-input">
+            <i class="icon ion-android-person margin-right-10 text-align-center"></i>
+            <span class="input-label">姓名*</span>
+            <input type="text" name="name" ng-model="name" placeholder="姓名" required>
+          </label>
+          <label class="item item-input">
+            <i class="icon ion-email margin-right-10 text-align-center"></i>
+            <span class="input-label">Email*</span>
+            <input type="email" name="email" ng-model="email" placeholder="電子信箱 ex. john@suhr.com" required>
+          </label>
+          <!--<label class="item item-input item-select">
+            <i class="icon ion-email margin-right-10 text-align-center"></i>
+            <span class="input-label">所在地區*</span>
+            <select name="location" ng-model="location" required>
+              <option value="0">台北</option>
+              <option value="1">桃園</option>
+              <option value="2">台中</option>
+            </select>
+          </label>-->
+          <label class="item item-input">
+            <i class="icon ion-iphone margin-right-10 text-align-center"></i>
+            <span class="input-label">手機</span>
+            <input type="text" ng-model="cel" placeholder="手機號碼">
+          </label>
+        </div>
+
+        <div class="list">
+          <div class="item item-divider margin-0 font-size-18 border-bottom-11c1f3">緊急聯絡人</div>
+          <label class="item item-input">
+            <i class="icon ion-android-person margin-right-10 text-align-center"></i>
+            <span class="input-label">聯絡人姓名*</span>
+            <input type="text" name="contact_name" ng-model="contact_name" placeholder="聯絡人姓名" required>
+          </label>
+          <label class="item item-input">
+            <i class="icon ion-iphone margin-right-10 text-align-center"></i>
+            <span class="input-label">聯絡人電話*</span>
+            <input type="text" name="contact_cel" ng-model="contact_cel" placeholder="聯絡人電話" required>
+          </label>
+          <label class="item item-input">
+            <span class="input-label alert padding-0 margin-0 text-align-left">*為必填</span>
+          </label>
+          <div class="alert" ng-show="register_form.account.$dirty && register_form.passwd.$dirty && register_form.name.$dirty && register_form.email.$dirty && register_form.location.$dirty">
+            <div ng-show="register_form.$error.required">帳號、密碼、姓名及Email不可為空</div>
+          </div>
+          <div class="alert" ng-show="register_form.passwd.$dirty">
+            <div ng-show="register_form.passwd.$error.minlength || register_form.passwd.$error.maxlength">密碼長度須介於8~20碼</div>
+            <div ng-show="register_form.passwd.$error.pwsame">密碼不可與帳號相同</div>
+          </div>
+          <div class="alert" ng-show="register_form.passwd_check.$dirty">
+            <div ng-show="register_form.passwd_check.$error.pwmatch">密碼與確認密碼不一致</div>
+          </div>
+          <div class="alert" ng-show="register_form.email.$dirty">
+            <div ng-show="register_form.email.$error.email">Email格式錯誤</div>
+          </div>
+          <div class="alert" ng-show="register_form.contact_name.$dirty && register_form.contact_cel.$dirty">
+            <div ng-show="register_form.contact_name.$error.required || register_form.contact_cel.$error.required">請填寫緊急聯絡人資訊</div>
+          </div>
+          <input id="submit_button" type="button" value="送出" class="button button-calm login_button margin-bottom-20" ng-click="insertdata()">
+        </div>
+      </form>
+    </div>
+  </ion-content>
+</ion-modal-view>

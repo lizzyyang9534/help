@@ -1,0 +1,22 @@
+<ion-view view-title="拯救紀錄">
+  <ion-content scroll="true">
+    <div ng-controller="HelpHistoryCtrl">
+      <div class="width-100per padding-30-0 background-2ADCD9 text-align-center color-FFF">
+        <div class="font-size-18">YOUR POINTS:</div>
+        <div class="margin-top-15 font-size-40">{{ points }}</div>
+      </div>
+      <ion-list>
+        <div id="help_history_unsolved_title" class="item item-divider margin-0 font-size-18 border-bottom-11c1f3 border-top-0" style="display: none">求助者尚未評分</div>
+          <div id="help_history_unsolved" class="list"></div>
+        <div id="help_history_solved_title" class="item item-divider margin-0 font-size-18 border-bottom-11c1f3 border-top-0" style="display: none">已完成</div>
+          <div id="help_history_solved" class="list"></div>
+      </ion-list>
+      <div id="none_record" class="margin-top-20 text-align-center color-B0B0B0" style="display: none">
+        <i class="icon ion-sad font-size-60"></i>
+        <div class="margin-top-20 font-size-18">
+          你還沒有幫助過人喔！
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

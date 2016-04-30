@@ -1,0 +1,60 @@
+<ion-view view-title="HELP ME !">
+	<ion-content>
+		<meta charset="utf-8">
+		<div class="list">
+			<div ng-controller="IncidentCtrl">
+				<form name="addincident_form">
+					<label class="item item-input item-select">
+						<div class="input-label" >事件重要程度</div>
+						<select ng-model="level" required>
+							<option value="emergency" class="addincident_lv_em">Emergency</option>
+							<option value="common" class="addincident_lv_co" selected>Common</option>
+						</select>
+					</label>
+					<label class="item item-input item-select">
+						<div class="input-label" >分類</div>
+						<select ng-model="category" required>
+							<option value="borrow" selected>Borrow</option>
+							<option value="trip">Trip</option>
+							<option value="eat">Eat</option>
+						</select>
+					</label>
+					<label class="item item-input">
+						<span class="input-label">主題</span>
+						<input type="text" ng-model="title" placeholder="半夜肚子餓想吃民雄廟口碳烤雞排" required>
+					</label>
+					<label class="item item-input">
+						<span class="input-label">說明</span>
+						<input type="text" ng-model="illust" placeholder="請告訴大家能如何幫助你，並說明事件" required>
+					</label>
+					<label class="item item-input">
+						<span class="input-label">期限</span>
+						<div class="width-150" ng-init="date=default_date;">
+							<input type="date" ng-model="date" required>
+						</div>
+						<div class="width-150" ng-init="time=default_date;">
+							<input type="time" ng-model="time" required>
+						</div>
+					</label>
+					<label class="item item-input item-select">
+						<div class="input-label">所在位置</div>
+							<select ng-model="location" required>
+								<option value="Current" selected>使用您目前的位置</option>
+								<option value="Taipei">台北</option>
+								<option value="Taoyuan">桃園</option>
+								<option value="Hsinchu">新竹</option>
+								<option value="Taichung">台中</option>
+								<option value="Chiayi">嘉義</option>
+								<option value="Tainan">台南</option>
+								<option value="Space">外太空</option>
+							</select>
+					</label>
+					<!-- <div id="check" ng-class="{'alert':addincident_form.$error.required}" ng-show="addincident_form.$error.required">
+						欄位不可有空
+					</div>-->
+					<input type="button" value="submit" class="button button-calm home_button margin-top-15" ng-click="addincident()">
+				</form>
+			</div>
+		</div>
+	</ion-content>
+</ion-view>

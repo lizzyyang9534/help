@@ -1,0 +1,10 @@
+{
+  "name": "help",
+  "app_id": "afdfc0f2",
+  "proxies": [
+    {
+      "path": "/api/",
+      "proxyUrl": "http://140.123.175.102:8080/api/"
+    }
+  ]
+}

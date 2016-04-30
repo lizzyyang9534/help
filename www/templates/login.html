@@ -1,0 +1,25 @@
+<ion-view hide-nav-bar="true">
+  <ion-content class="login" scroll="false">
+    <div>
+      <div class="logo_login"> </div>
+      <form name="login_form">
+        <label class="item item-input border-0 padding-6-10per">
+          <div class="login_input_border">
+            <input class="login_input" type="text" name="username" ng-model="loginData.username" placeholder="Account" required>
+          </div>
+        </label>
+        <label class="item item-input border-0 padding-6-10per">
+          <div class="login_input_border">
+            <input class="login_input" type="password" name="password" ng-model="loginData.password" placeholder="Password" required>
+          </div>
+        </label>
+        <input type="button" value="登入" class="button button-calm login_button" ng-click="doLogin(login_form)">
+        <div class="margin-top-15 margin-0-25per text-align-center">
+          <span class="color-FFF font-size-16" ng-click="register()">註冊</span>
+          <span class="color-FFF font-size-16">|</span>
+          <span class="color-FFF font-size-16" ng-click="forgetPassword()">忘記密碼</span>
+        </div>
+      </form>
+    </div>
+  </ion-content>
+</ion-view>

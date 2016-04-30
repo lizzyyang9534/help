@@ -1,0 +1,21 @@
+<ion-view view-title="Home">
+  <ion-content class="background-000000">
+    <div>
+      <div class="logo_login_furu"> </div>
+      <div class="">
+        <label class="item item-input item-stacked-label border-0 padding-6-10per">
+          <span class="input-label width-25per">帳號</span>
+          <input class="width-70per padding-right-0" type="text" name="username" ng-model="loginData.username" required>
+        </label>
+        <label class="item item-input item-stacked-label border-0 padding-6-10per">
+          <span class="input-label width-25per">密碼</span>
+          <input class="width-70per padding-right-0" type="password" name="password" ng-model="loginData.password" required>
+        </label>
+        <div class="margin-top-15 margin-0-15per">
+          <input type="button" value="登入" class="button background-FF00D8 login_button float-left color-FF0000" ng-click="doLogin(login_form)">
+          <input type="button" value="忘記密碼" class="button background-FFFF00 login_button float-right color-FF0000" ng-click="forgetPassword()">
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

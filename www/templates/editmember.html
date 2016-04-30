@@ -1,0 +1,68 @@
+﻿<ion-view view-title="修改資料">
+    <ion-content>
+        <div class="list">
+            <div ng-controller="MemberCtrl">
+                <form name="edit_form">
+                    <label class="item item-input">
+                        <i class="icon ion-android-contact margin-right-10 text-align-center"></i>
+                        <span class="input-label">帳號</span>
+                        <input type="text" id="account" name="account" ng-model="account" class="background-none" ng-disabled="true">
+                    </label>
+                    <label class="item item-input">
+                        <i class="icon ion-locked margin-right-10 text-align-center"></i>
+                        <span class="input-label">密碼</span>
+                        <input type="password" id="passwd" name="passwd" ng-model="passwd" pw-account-check="account" placeholder="密碼" required ng-minlength="8" ng-maxlength="20">
+                    </label>
+                    <label class="item item-input">
+                        <i class="icon ion-checkmark-circled margin-right-10 text-align-center"></i>
+                        <span class="input-label">確認密碼</span>
+                        <input type="password" name="passwd_check" ng-model="passwd_check" pw-check="passwd" placeholder="請再輸入一次密碼">
+                    </label>
+                    <label class="item item-input">
+                        <i class="icon ion-android-person margin-right-10 text-align-center"></i>
+                        <span class="input-label">姓名</span>
+                        <input type="text" name="name" ng-model="name" required>
+                    </label>
+                    <label class="item item-input">
+                        <i class="icon ion-iphone margin-right-10 text-align-center"></i>
+                        <span class="input-label">手機</span>
+                        <input type="text" ng-model="cel">
+                    </label>
+                    <label class="item item-input">
+                        <i class="icon ion-email margin-right-10 text-align-center"></i>
+                        <span class="input-label">Email</span>
+                        <input type="email" name="email" ng-model="email" required>
+                    </label>                  
+					<label class="item item-input">
+						<i class="icon ion-android-person margin-right-10 text-align-center"></i>
+						<span class="input-label">緊急聯絡人姓名</span>
+						<input type="text" name="contact_name" ng-model="contact_name" placeholder="聯絡人姓名" required>
+					</label>
+					<label class="item item-input">
+						<i class="icon ion-iphone margin-right-10 text-align-center"></i>
+						<span class="input-label">緊急聯絡人電話</span>
+						<input type="text" name="contact_cel" ng-model="contact_cel" placeholder="聯絡人電話" required>
+					</label>
+					
+					
+					
+
+                    <div class="alert" ng-show="register_form.account.$dirty && register_form.passwd.$dirty && register_form.name.$dirty && register_form.email.$dirty && register_form.location.$dirty">
+                        <div ng-show="register_form.$error.required">帳號、密碼、姓名及Email、地區欄位不可為空</div>
+                    </div>
+                    <div class="alert" ng-show="register_form.passwd.$dirty">
+                        <div ng-show="register_form.passwd.$error.minlength || register_form.passwd.$error.maxlength">密碼長度須介於8~20碼</div>
+                        <div ng-show="register_form.passwd.$error.pwsame">密碼不可與帳號相同</div>
+                    </div>
+                    <div class="alert" ng-show="register_form.passwd_check.$dirty">
+                        <div ng-show="register_form.passwd_check.$error.pwmatch">密碼與確認密碼不一致</div>
+                    </div>
+                    <div class="alert" ng-show="register_form.email.$dirty">
+                        <div ng-show="register_form.email.$error.email">Email格式錯誤</div>
+                    </div>
+                    <input id="submit_button" type="button" value="送出" class="button button-calm home_button margin-top-30" ng-click="updateData()">
+                </form>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

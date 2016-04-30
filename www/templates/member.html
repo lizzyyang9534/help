@@ -1,0 +1,35 @@
+<ion-view view-title="會員資料">
+  <ion-content>
+    <div class="list" ng-controller="AppCtrl">
+	  <div class="item item-divider margin-0 font-size-18 border-bottom-11c1f3">基本資料</div>
+      <label class="item item-input">
+        <span class="input-label">帳號</span> {{user_view.account}}
+      </label>
+      <label class="item item-input">
+        <span class="input-label">密碼</span> {{user_view.password}}
+      </label>
+      <label class="item item-input">
+        <span class="input-label">姓名</span> {{user_view.name}}
+      </label>
+      <label class="item item-input">
+        <span class="input-label">手機</span> {{user_view.cellphone}}
+      </label>
+      <label class="item item-input">
+        <span class="input-label">E-mail</span> {{user_view.email}}
+      </label>
+      <!--<input id="edit_button" type="button" value="修改資料" class="button button-calm home_button" ng-click="editMember()">-->
+    </div>
+	<div class="list" >
+	  <div class="item item-divider margin-0 font-size-18 border-bottom-11c1f3">緊急聯絡人</div>
+      <label class="item item-input">
+        <span class="input-label">聯絡人姓名</span> {{user_view.contact_name}}
+      </label>
+      <label class="item item-input">
+        <span class="input-label">聯絡人電話</span> {{user_view.contact_cel}}
+      </label>
+            
+    </div>
+	<input id="edit_button" type="button" value="修改資料" class="button button-calm home_button" ng-click="editMember()">
+      
+  </ion-content>
+</ion-view>
