@@ -1,5 +1,5 @@
 <ion-modal-view>
-  <ion-header-bar class="bar-calm">
+  <ion-header-bar class="bar-calm background-B4E065">
     <h1 class="title">事件內容</h1>
     <div class="buttons">
       <button class="button button-clear" ng-click="closeIncident()">
@@ -41,10 +41,10 @@
         <span class="input-label">評分</span>
         <span ng-hide="incident.status == 'unsolved'">{{ incident.rating }}</span>
       </label>
-      <div id="rating_option" class="button-bar bar-calm background-11c1f3 width-90per margin-auto" ng-show="incident.status == 'unsolved'">
-        <div class="button button-raised ink-dark" ng-click="rating(1)">尚可</div>
-        <div class="button button-raised ink-dark" ng-click="rating(2)">棒</div>
-        <div class="button button-raised ink-dark" ng-click="rating(3)">很棒</div>
+      <div id="rating_option" class="button-bar bar-calm background-A8BF7C width-90per margin-auto" ng-show="incident.status == 'unsolved'">
+        <div class="button button-raised background-A8BF7C ink-dark" ng-click="rating(1)">尚可</div>
+        <div class="button button-raised background-A8BF7C ink-dark" ng-click="rating(2)">棒</div>
+        <div class="button button-raised background-A8BF7C ink-dark" ng-click="rating(3)">很棒</div>
       </div>
     </div>
   </ion-content>

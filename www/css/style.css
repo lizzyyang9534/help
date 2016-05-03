@@ -9,7 +9,10 @@ input.ng-dirty.ng-invalid {
   font-size: 18px;
 }
 .home {
-  background: #2ADCD9;
+  background: #9BEEC7;
+}
+@keyframes spin {
+    to { transform: rotate(30deg); }
 }
 .logo {
   margin: auto;
@@ -18,9 +21,12 @@ input.ng-dirty.ng-invalid {
   width: 200px;
   height: 200px;
   border-radius: 100px;
-  background: #FFF;
+  background-image: url("../img/earth3.png");
+  background-position: center;
+  background-repeat: no-repeat;
   text-align: center;
   line-height: 200px;
+  animation: spin 10s infinite linear;
 }
 .login{
   margin: 0;
@@ -322,6 +328,12 @@ input.ng-dirty.ng-invalid {
 .color-B0B0B0{
 	color: #B0B0B0;
 }
+.color-B4E065{
+	color: #B4E065;
+}
+.color-A8BF7C{
+	color: #A8BF7C;
+}
 .background-none{
 	background: none !important;
 }
@@ -355,6 +367,12 @@ input.ng-dirty.ng-invalid {
 .background-11c1f3{
 	background: #11c1f3 !important;
 }
+.background-B4E065{
+	background: #B4E065 !important;
+}
+.background-A8BF7C{
+	background: #A8BF7C !important;
+}
 .background-color-transparent{
 	background-color: transparent !important;
 }
@@ -367,4 +385,15 @@ input.ng-dirty.ng-invalid {
 #map {
   width: 100%;
   height: 100%;
+}
+@keyframes spin {
+    to { transform: rotate(1turn); }
+}
+.avatar {
+    width:40px;
+    height:93px;
+    top:16%;
+    left:500px;
+    animation: spin 10s infinite linear;
+    transform-origin: 290% 30px; /* 150px = path radius */
 }

@@ -1,13 +1,20 @@
 <ion-view view-title="事件紀錄">
   <ion-content scroll="true">
     <div ng-controller="IncidentHistoryCtrl">
+      <ion-refresher on-refresh="doRefresh()" pulling-text="重新整理"></ion-refresher>
       <ion-list>
-        <div id="incident_history_unsolved_title" class="item item-divider margin-0 font-size-18 border-bottom-11c1f3 border-top-0" style="display: none">尚未解決/評分</div>
-          <div id="incident_history_unsolved" class="list"></div>
-        <div id="incident_history_noHelper_title" class="item item-divider margin-0 font-size-18 border-bottom-11c1f3 border-top-0" style="display: none">等待協助</div>
-          <div id="incident_history_noHelper" class="list"></div>
-        <div id="incident_history_solved_title" class="item item-divider margin-0 font-size-18 border-bottom-11c1f3 border-top-0" style="display: none">已完成</div>
-          <div id="incident_history_solved" class="list margin-bottom-20"></div>
+        <div id="incident_history_unsolved_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
+          <i class="icon ion-help-circled color-FFDC00"></i> <span>尚未解決/評分</span>
+        </div>
+        <div id="incident_history_unsolved" class="list"></div>
+        <div id="incident_history_noHelper_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
+          <i class="icon ion-close-circled color-E14F2B"></i> 等待協助
+        </div>
+        <div id="incident_history_noHelper" class="list"></div>
+        <div id="incident_history_solved_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
+          <i class="icon ion-checkmark-circled color-25D665"></i> 已完成
+        </div>
+        <div id="incident_history_solved" class="list margin-bottom-20"></div>
       </ion-list>
     </div>
   </ion-content>

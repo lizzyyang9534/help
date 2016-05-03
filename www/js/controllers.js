@@ -3,40 +3,41 @@ angular.module('starter.controllers', [])
 .constant('serverIP', '')
 
 .factory('$localstorage', ['$window', function($window) {
-    return {
-      set: function(key, value) {
-        $window.localStorage[key] = value;
-      },
-      get: function(key, defaultValue) {
-        return $window.localStorage[key] || defaultValue;
-      },
-      setObject: function(key, value) {
-        $window.localStorage[key] = JSON.stringify(value);
-      },
-      getObject: function(key) {
-        return JSON.parse($window.localStorage[key] || '{}');
-      }
+  return {
+    set: function(key, value) {
+      $window.localStorage[key] = value;
+    },
+    get: function(key, defaultValue) {
+      return $window.localStorage[key] || defaultValue;
+    },
+    setObject: function(key, value) {
+      $window.localStorage[key] = JSON.stringify(value);
+    },
+    getObject: function(key) {
+      return JSON.parse($window.localStorage[key] || '{}');
     }
-  }])
-  .value('mapp', 'yoyoimmappoutside')
-  .controller('AppCtrl', function($scope, $ionicModal, $ionicPopup, $timeout, $http, $state, $ionicHistory, $localstorage, API, ionicMaterialInk, mapp) {
-    //mapp='yoyoimmapp';
-    console.log(mapp);
-    // With the new view caching in Ionic, Controllers are only called
-    // when they are recreated or on app start, instead of every page change.
-    // To listen for when this page is active (for example, to refresh data),
-    // listen for the $ionicView.enter event:
-    //$scope.$on('$ionicView.enter', function(e) {
-    //});
+  }
+}])
 
-    //api server ip
-    //var serverIP;
-    if (ionic.Platform.isAndroid() || ionic.Platform.isIOS()) {
-      serverIP = API.client;
-    } else {
-      serverIP = API.local;
-    }
-    /*if (navigator.geolocation) {
+.value('mapp', 'yoyoimmappoutside')
+
+.controller('AppCtrl', function($scope, $ionicModal, $ionicPopup, $timeout, $http, $state, $ionicHistory, $localstorage, API, ionicMaterialInk, mapp) {
+  //mapp='yoyoimmapp';
+  console.log(mapp);
+  // With the new view caching in Ionic, Controllers are only called
+  // when they are recreated or on app start, instead of every page change.
+  // To listen for when this page is active (for example, to refresh data),
+  // listen for the $ionicView.enter event:
+  //$scope.$on('$ionicView.enter', function(e) {
+  //});
+
+  //api server ip
+  if (ionic.Platform.isAndroid() || ionic.Platform.isIOS()) {
+    serverIP = API.client;
+  } else {
+    serverIP = API.local;
+  }
+  /*if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(function(pos) {
     catchpos = pos.coords.latitude + "," + pos.coords.longitude;
     console.log("HIHIHIhere");
@@ -44,159 +45,159 @@ angular.module('starter.controllers', [])
     alert('Unable to catch location: ' + error.message);
   });
 }*/
-    // Create the modal that we will use later
-    $ionicModal.fromTemplateUrl('templates/register.html', {
-      scope: $scope
-    }).then(function(modal) {
-      $scope.modal1 = modal;
-    });
+  // Create the modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/register.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal1 = modal;
+  });
 
-    $ionicModal.fromTemplateUrl('templates/forgetPassword.html', {
-      scope: $scope
-    }).then(function(modal) {
-      $scope.modal2 = modal;
-    });
+  $ionicModal.fromTemplateUrl('templates/forgetPassword.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal2 = modal;
+  });
 
-    $ionicModal.fromTemplateUrl('templates/incident.html', {
-      scope: $scope
-    }).then(function(modal) {
-      $scope.modal3 = modal;
-    });
+  $ionicModal.fromTemplateUrl('templates/incident.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal3 = modal;
+  });
 
-    $ionicModal.fromTemplateUrl('templates/help.html', {
-      scope: $scope
-    }).then(function(modal) {
-      $scope.modal4 = modal;
-    });
+  $ionicModal.fromTemplateUrl('templates/help.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal4 = modal;
+  });
 
-    // Triggered in the modal to close it
-    $scope.closeRegister = function() {
-      $scope.modal1.hide();
-    };
-    $scope.closeForget = function() {
-      $scope.modal2.hide();
-    };
-    $scope.closeIncident = function() {
-      $scope.modal3.hide();
-    };
-    $scope.closeHelp = function() {
-      $scope.modal4.hide();
-    };
-    // Open the modal
-    $scope.register = function() {
-      $scope.modal1.show();
-    };
-    $scope.forgetPassword = function() {
-      $scope.modal2.show();
-    };
-    $scope.incident = function(incident_number) {
-      var incident_data = $localstorage.getObject('incident_data');
-      //console.log(incident_data[incident_number]);
+  // Triggered in the modal to close it
+  $scope.closeRegister = function() {
+    $scope.modal1.hide();
+  };
+  $scope.closeForget = function() {
+    $scope.modal2.hide();
+  };
+  $scope.closeIncident = function() {
+    $scope.modal3.hide();
+  };
+  $scope.closeHelp = function() {
+    $scope.modal4.hide();
+  };
+  // Open the modal
+  $scope.register = function() {
+    $scope.modal1.show();
+  };
+  $scope.forgetPassword = function() {
+    $scope.modal2.show();
+  };
+  $scope.incident = function(incident_number) {
+    var incident_data = $localstorage.getObject('incident_data');
+    //console.log(incident_data[incident_number]);
 
-      $scope.incident.number = incident_data[incident_number].number;
-      $scope.incident.title = incident_data[incident_number].title;
-      $scope.incident.helper = incident_data[incident_number].helper;
-      $scope.incident.level = incident_data[incident_number].level;
-      $scope.incident.category = incident_data[incident_number].category;
-      $scope.incident.date = incident_data[incident_number].date;
-      $scope.incident.illust = incident_data[incident_number].illust;
-      $scope.incident.status = incident_data[incident_number].status;
-      $scope.incident.rating = incident_data[incident_number].rating;
+    $scope.incident.number = incident_data[incident_number].number;
+    $scope.incident.title = incident_data[incident_number].title;
+    $scope.incident.helper = incident_data[incident_number].helper;
+    $scope.incident.level = incident_data[incident_number].level;
+    $scope.incident.category = incident_data[incident_number].category;
+    $scope.incident.date = incident_data[incident_number].date;
+    $scope.incident.illust = incident_data[incident_number].illust;
+    $scope.incident.status = incident_data[incident_number].status;
+    $scope.incident.rating = incident_data[incident_number].rating;
 
-      $scope.modal3.show();
-    };
-    $scope.help = function(help_number) {
-      var help_data = $localstorage.getObject('help_data');
-      //console.log(help_data[help_number]);
+    $scope.modal3.show();
+  };
+  $scope.help = function(help_number) {
+    var help_data = $localstorage.getObject('help_data');
+    //console.log(help_data[help_number]);
 
-      $scope.help.title = help_data[help_number].title;
-      $scope.help.ID = help_data[help_number].ID;
-      $scope.help.level = help_data[help_number].level;
-      $scope.help.category = help_data[help_number].category;
-      $scope.help.date = help_data[help_number].date;
-      $scope.help.illust = help_data[help_number].illust;
-      $scope.help.status = help_data[help_number].status;
-      $scope.help.rating = help_data[help_number].rating;
+    $scope.help.title = help_data[help_number].title;
+    $scope.help.ID = help_data[help_number].ID;
+    $scope.help.level = help_data[help_number].level;
+    $scope.help.category = help_data[help_number].category;
+    $scope.help.date = help_data[help_number].date;
+    $scope.help.illust = help_data[help_number].illust;
+    $scope.help.status = help_data[help_number].status;
+    $scope.help.rating = help_data[help_number].rating;
 
-      $scope.modal4.show();
-    };
+    $scope.modal4.show();
+  };
 
-    // Form data for the login modal
-    $scope.loginData = {};
-    $scope.user_view = $localstorage.getObject('user_data');
+  // Form data for the login modal
+  $scope.loginData = {};
+  $scope.user_view = $localstorage.getObject('user_data');
 
-    // Perform the login action when the user submits the login form
-    $scope.doLogin = function(login_form) {
-        // 通過驗證
-        console.log(serverIP);
-        if (login_form.$valid) {
-          $http.post(serverIP + "/api/login.php", {
-              'account': $scope.loginData.username,
-              'password': $scope.loginData.password
-            })
-            .success(function(data, status, headers, config) {
-              //console.log('Doing login', $scope.loginData);
-              //console.log(data);
-              $scope.user = data;
+  // Perform the login action when the user submits the login form
+  $scope.doLogin = function(login_form) {
+      // 通過驗證
+      console.log(serverIP);
+      if (login_form.$valid) {
+        $http.post(serverIP + "/api/login.php", {
+            'account': $scope.loginData.username,
+            'password': $scope.loginData.password
+          })
+          .success(function(data, status, headers, config) {
+            //console.log('Doing login', $scope.loginData);
+            //console.log(data);
+            $scope.user = data;
 
-              if (data == "error") {
-                $ionicPopup.alert({
-                  title: "無法登入",
-                  template: "帳號或密碼錯誤！"
-                });
-              } else if ($scope.user.result == "login") {
-                $localstorage.setObject('user_data', {
-                  account: $scope.user.account,
-                  password: $scope.user.password,
-                  name: $scope.user.name,
-                  cellphone: $scope.user.cellphone,
-                  email: $scope.user.email,
-                  //location: $scope.user.location,
-                  contact_name: $scope.user.contact_name,
-                  contact_cel: $scope.user.contact_cel,
-                  points: $scope.user.points
-                });
+            if (data == "error") {
+              $ionicPopup.alert({
+                title: "無法登入",
+                template: "帳號或密碼錯誤！"
+              });
+            } else if ($scope.user.result == "login") {
+              $localstorage.setObject('user_data', {
+                account: $scope.user.account,
+                password: $scope.user.password,
+                name: $scope.user.name,
+                cellphone: $scope.user.cellphone,
+                email: $scope.user.email,
+                //location: $scope.user.location,
+                contact_name: $scope.user.contact_name,
+                contact_cel: $scope.user.contact_cel,
+                points: $scope.user.points
+              });
 
-                //console.log($localstorage.get('user_data'));
-                /*$ionicPopup.alert({
-                  title: "登入成功"
-                });*/
+              //console.log($localstorage.get('user_data'));
+              /*$ionicPopup.alert({
+                title: "登入成功"
+              });*/
 
-                $ionicHistory.nextViewOptions({
-                  disableBack: true
-                });
-                $state.go("app.home");
-              }
-            });
-        } else {
-          // 未通過驗證
-          $ionicPopup.alert({
-            title: "請輸入帳號及密碼！"
+              $ionicHistory.nextViewOptions({
+                disableBack: true
+              });
+              $state.go("app.home");
+            }
           });
-        }
+      } else {
+        // 未通過驗證
+        $ionicPopup.alert({
+          title: "請輸入帳號及密碼！"
+        });
       }
-      // Simulate a login delay. Remove this and replace with your login
-      // code if using a login system
-
-
-    $scope.editMember = function() {
-      $state.go("app.editmember");
     }
+    // Simulate a login delay. Remove this and replace with your login
+    // code if using a login system
 
 
-    $scope.home = function() {
-      $ionicHistory.nextViewOptions({
-        disableBack: true
-      });
-      $state.go("app.home");
-    }
+  $scope.editMember = function() {
+    $state.go("app.editmember");
+  }
 
-    $scope.logout = function() {
-      $state.go("app.logout");
-    }
 
-    ionicMaterialInk.displayEffect();
-  })
+  $scope.home = function() {
+    $ionicHistory.nextViewOptions({
+      disableBack: true
+    });
+    $state.go("app.home");
+  }
+
+  $scope.logout = function() {
+    $state.go("app.logout");
+  }
+
+  ionicMaterialInk.displayEffect();
+})
 
 .controller('HomeCtrl', function($scope, $ionicHistory, $state, ionicMaterialInk, $localstorage, $ionicPopup, $timeout) {
 
@@ -218,8 +219,8 @@ angular.module('starter.controllers', [])
 
   $scope.doRefresh = function() {
     $timeout(function() {
-      $window.location.reload(true);
-    },1000)
+      console.log("refresh");
+    }, 1000)
   }
 
   $scope.centerOnMe = function() {
@@ -339,7 +340,6 @@ angular.module('starter.controllers', [])
       });
     }
   }
-
   ionicMaterialInk.displayEffect();
 })
 
@@ -382,7 +382,6 @@ angular.module('starter.controllers', [])
       });
     }
   }
-
   ionicMaterialInk.displayEffect();
 })
 
@@ -486,11 +485,10 @@ angular.module('starter.controllers', [])
         }); //導到正確位置
       });
   }
-
   ionicMaterialInk.displayEffect();
 })
 
-.controller('IncidentViewCtrl', function($scope, $http, $ionicPopup, $state, $localstorage, $window) {
+.controller('IncidentViewCtrl', function($scope, $http, $ionicPopup, $state, $localstorage, $window, ionicMaterialInk) {
   var user_data = $localstorage.getObject('user_data');
   $scope.rating = function(rating_option) {
     var confirmPopup = $ionicPopup.confirm({
@@ -514,7 +512,7 @@ angular.module('starter.controllers', [])
             //console.log(data);
             user_data.points = data;
             var new_user_data = user_data;
-            $localstorage.setObject('user_data', new_user_data);
+            //$localstorage.setObject('user_data', new_user_data);
 
             $scope.closeIncident();
             $window.location.reload(true);
@@ -523,95 +521,64 @@ angular.module('starter.controllers', [])
         console.log('You are not sure');
     });
   }
-})
-
-.controller('IncidentHistoryCtrl', function($scope, $http, $compile, $localstorage, $ionicPopup, ionicMaterialInk) {
-  var user_data = $localstorage.getObject('user_data');
-  var all_incident = [];
-
-  $http.post(serverIP + "/api/IncidentHistory.php", {
-      'account': user_data.account
-    })
-    .success(function(data, status, headers, config) {
-      incident_history = data;
-      //console.log(help_history);
-      for (i = 0; i < incident_history.length; i++) {
-        var number = incident_history[i].number;
-        var title = incident_history[i].title;
-        var illust = incident_history[i].illust;
-        var status = incident_history[i].status;
-
-        all_incident[number] = incident_history[i];
-
-        var icon;
-        var add_record;
-
-        if (status == "unsolved") {
-          icon = "ion-help-circled color-FFDC00";
-          add_record = "#incident_history_unsolved";
-          $("#incident_history_unsolved_title").show();
-        } else if (status == "solved") {
-          icon = "ion-checkmark-circled color-25D665";
-          add_record = "#incident_history_solved";
-          $("#incident_history_solved_title").show();
-        } else if (status == "no helper") {
-          icon = "ion-close-circled color-E14F2B";
-          add_record = "#incident_history_noHelper";
-          $("#incident_history_noHelper_title").show();
-        }
-
-        var record = "<ion-item nav-clear menu-close class=\"item-icon-right item-avatar\" ng-click=\"incident(" + number + ")\">" +
-          "<img src=\"img/12970458_962849903770409_2043643368_o.jpg\">" +
-          "<h2>" + title + "</h2>" +
-          "<p>" + illust + "</p>" +
-          "<i class=\"icon " + icon + "\"></i>" +
-          "</ion-item>";
-
-        var record_compile = $compile(record);
-        var nodeOfCompiledDOM = record_compile($scope);
-        $(add_record).append(nodeOfCompiledDOM);
-      }
-
-      $localstorage.setObject('incident_data', all_incident);
-    })
   ionicMaterialInk.displayEffect();
 })
 
-.controller('HelpHistoryCtrl', function($scope, $http, $compile, $localstorage, $ionicPopup, ionicMaterialInk) {
+.controller('IncidentHistoryCtrl', function($scope, $http, $compile, $localstorage, $ionicPopup, ionicMaterialInk, $timeout) {
   var user_data = $localstorage.getObject('user_data');
-  var all_help = [];
-  $scope.points = user_data.points;
+  var all_incident = [];
 
-  $http.post(serverIP + "/api/helpHistory.php", {
-      'account': user_data.account
-    })
-    .success(function(data, status, headers, config) {
-      help_history = data;
-      //console.log(help_history.length);
+  $scope.doRefresh = function() {
+    console.log('Refreshing!');
+    $timeout(function() {
+      $http.post(serverIP + "/api/getMemberData.php", {
+          'account': user_data.account
+        })
+        .success(function(data, status, headers, config) {
+          var new_user_data = data;
+          $localstorage.setObject('user_data', new_user_data);
+        })
+      $("#incident_history_unsolved").empty();
+      $("#incident_history_solved").empty();
+      $("#incident_history_noHelper").empty();
+      $scope.initialize();
+      $scope.$broadcast('scroll.refreshComplete');
+    }, 1000);
+  }
 
-      if (help_history.length > 0) {
-        for (i = 0; i < help_history.length; i++) {
-          var number = help_history[i].number;
-          var title = help_history[i].title;
-          var illust = help_history[i].illust;
-          var status = help_history[i].status;
+  $scope.initialize = function() {
+    $http.post(serverIP + "/api/IncidentHistory.php", {
+        'account': user_data.account
+      })
+      .success(function(data, status, headers, config) {
+        incident_history = data;
+        console.log(incident_history);
+        for (i = 0; i < incident_history.length; i++) {
+          var number = incident_history[i].number;
+          var title = incident_history[i].title;
+          var illust = incident_history[i].illust;
+          var status = incident_history[i].status;
 
-          all_help[number] = help_history[i];
+          all_incident[number] = incident_history[i];
 
           var icon;
           var add_record;
 
           if (status == "unsolved") {
-            icon = "ion-help-circled color-FFDC00";
-            add_record = "#help_history_unsolved";
-            $("#help_history_unsolved_title").show();
+            icon = "ion-android-create color-A8BF7C font-size-22";
+            add_record = "#incident_history_unsolved";
+            $("#incident_history_unsolved_title").show();
           } else if (status == "solved") {
-            icon = "ion-checkmark-circled color-25D665";
-            add_record = "#help_history_solved";
-            $("#help_history_solved_title").show();
+            icon = "ion-android-checkbox-outline color-A8BF7C font-size-22";
+            add_record = "#incident_history_solved";
+            $("#incident_history_solved_title").show();
+          } else if (status == "no helper") {
+            icon = "ion-android-create color-A8BF7C font-size-22";
+            add_record = "#incident_history_noHelper";
+            $("#incident_history_noHelper_title").show();
           }
 
-          var record = "<ion-item nav-clear menu-close id=\"" + number + "\" class=\"item-icon-right item-avatar\" ng-click=\"help(" + number + ")\">" +
+          var record = "<ion-item nav-clear menu-close class=\"item-icon-right item-avatar\" ng-click=\"incident(" + number + ")\">" +
             "<img src=\"img/12970458_962849903770409_2043643368_o.jpg\">" +
             "<h2>" + title + "</h2>" +
             "<p>" + illust + "</p>" +
@@ -622,12 +589,88 @@ angular.module('starter.controllers', [])
           var nodeOfCompiledDOM = record_compile($scope);
           $(add_record).append(nodeOfCompiledDOM);
         }
-      } else {
-        $('#none_record').show();
-      }
 
-      $localstorage.setObject('help_data', all_help);
-    })
+        $localstorage.setObject('incident_data', all_incident);
+      })
+  }
+  $scope.initialize();
+
+  ionicMaterialInk.displayEffect();
+})
+
+.controller('HelpHistoryCtrl', function($scope, $http, $compile, $localstorage, $ionicPopup, ionicMaterialInk, $timeout) {
+  var user_data = $localstorage.getObject('user_data');
+
+  $scope.doRefresh = function() {
+    $timeout(function() {
+      $http.post(serverIP + "/api/getMemberData.php", {
+          'account': user_data.account
+        })
+        .success(function(data, status, headers, config) {
+          var new_user_data = data;
+          //console.log(new_user_data);
+          $localstorage.setObject('user_data', new_user_data);
+          $scope.points = new_user_data.points;
+        })
+      $("#help_history_unsolved").empty();
+      $("#help_history_solvede").empty();
+      $scope.initialize();
+      $scope.$broadcast('scroll.refreshComplete');
+    }, 1000);
+  }
+  $scope.initialize = function() {
+    var all_help = [];
+
+    $scope.points = user_data.points;
+    $http.post(serverIP + "/api/helpHistory.php", {
+        'account': user_data.account
+      })
+      .success(function(data, status, headers, config) {
+        help_history = data;
+        //console.log(help_history.length);
+
+        if (help_history.length > 0) {
+          for (i = 0; i < help_history.length; i++) {
+            var number = help_history[i].number;
+            var title = help_history[i].title;
+            var illust = help_history[i].illust;
+            var status = help_history[i].status;
+
+            all_help[number] = help_history[i];
+
+            var icon;
+            var add_record;
+
+            if (status == "unsolved") {
+              icon = "ion-help-circled color-A8BF7C font-size-22";
+              add_record = "#help_history_unsolved";
+              $("#help_history_unsolved_title").show();
+            } else if (status == "solved") {
+              icon = "ion-ribbon-b color-A8BF7C font-size-22";
+              add_record = "#help_history_solved";
+              $("#help_history_solved_title").show();
+            }
+
+            var record = "<ion-item nav-clear menu-close id=\"" + number + "\" class=\"item-icon-right item-avatar\" ng-click=\"help(" + number + ")\">" +
+              "<img src=\"img/12970458_962849903770409_2043643368_o.jpg\">" +
+              "<h2>" + title + "</h2>" +
+              "<p>" + illust + "</p>" +
+              "<i class=\"icon " + icon + "\"></i>" +
+              "</ion-item>";
+
+            var record_compile = $compile(record);
+            var nodeOfCompiledDOM = record_compile($scope);
+            $(add_record).append(nodeOfCompiledDOM);
+          }
+        } else {
+          $('#none_record').show();
+        }
+
+        $localstorage.setObject('help_data', all_help);
+      })
+
+  }
+  $scope.initialize();
   ionicMaterialInk.displayEffect();
 })
 
@@ -817,7 +860,7 @@ angular.module('starter.controllers', [])
   };
 
   $scope.doRefresh = function() {
-    $window.location.reload(true);
+    $scope.initialize();
   }
 
   ionicMaterialInk.displayEffect();
