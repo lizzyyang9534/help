@@ -1,7 +1,7 @@
 <ion-view view-title="事件紀錄">
-  <ion-content scroll="true">
-    <div ng-controller="IncidentHistoryCtrl">
-      <ion-refresher on-refresh="doRefresh()" pulling-text="重新整理"></ion-refresher>
+  <ion-content scroll="true" ng-controller="IncidentHistoryCtrl">
+    <ion-refresher on-refresh="doRefresh()" pulling-text="重新整理"></ion-refresher>
+    <div>
       <ion-list>
         <div id="incident_history_unsolved_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
           <i class="icon ion-help-circled color-FFDC00"></i> <span>尚未解決/評分</span>

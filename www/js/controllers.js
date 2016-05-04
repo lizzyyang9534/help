@@ -226,10 +226,10 @@ angular.module('starter.controllers', [])
   $scope.centerOnMe = function() {
 
 
-    if (!$scope.map) {
+    /*if (!$scope.map) {
       console.log("set centeronme xxxxQQ")
       return;
-    }
+    }*/
 
     $ionicLoading.show({
       content: 'Getting current location...',
@@ -679,7 +679,7 @@ angular.module('starter.controllers', [])
   var allLocation = [];
 
   $scope.initialize = function() {
-
+    //$scope.centerOnMe();
     var myLatlng = new google.maps.LatLng(23.560803, 120.471977);
 
     //console.log(myLatlng);
@@ -723,6 +723,7 @@ angular.module('starter.controllers', [])
           var loc = allLocation[i].location;
           var title = allLocation[i].title;
           var illust = allLocation[i].illust;
+          var num = allLocation[i].number;
 
           var icon = {
 
@@ -743,8 +744,10 @@ angular.module('starter.controllers', [])
 
           //set infowindow content
           //var anyhelper = "<p>"+allLocation[i].anyhelper+" helper</p>";
-          var status = "<a>" + allLocation[i].status + "</a>";
-          var help_button = "<button class=\"help_button\" ng-click=\"helpcheck(" + i + ")\">HELP</button>";
+          /*var status = "<a ng-show = \"show\" >" + allLocation[i].status+ "</a>"
+                        "<a ng-show = \"show=true\" > unsolved </a>";*/
+          var status = "<a>" + allLocation[i].status+ "</a>"
+          var help_button = "<button class=\"help_button\" ng-click=\"helpcheck(" + num + ")\">HELP</button>";
           var infoContent = "<div>" + '<h5>' + title + status + '</h5>' + '<p>說明> ' + illust + '</p>' + help_button + "</div>";
           //compiled let ng-click works
           var infoCompiled = $compile(infoContent)($scope);
@@ -768,20 +771,6 @@ angular.module('starter.controllers', [])
   google.maps.event.addDomListener(window, 'load', $scope.initialize);
 
   $scope.helpcheck = function(incident_number) {
-    /*
-    $ionicModal.fromTemplateUrl('templates/contactChoose.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal = modal;
-    });
-    $scope.closeContact_ch = function() {
-      $scope.modal.hide();
-    };
-    function contact_ch() {
-      $scope.modal.show();
-    };*/
-
     var confirmPopup = $ionicPopup.confirm({
       title: '確認救援',
       template: '確定要幫助他嗎?',
@@ -791,11 +780,8 @@ angular.module('starter.controllers', [])
     confirmPopup.then(function(res) {
       if (res) {
         console.log('是');
-        /*$ionicHistory.nextViewOptions({
-          disableBack: true
-        });
-        contact_ch();*/
-        console.log(incident_number);
+        console.log('幫助事件號碼:'+incident_number);
+
         $http.post(serverIP + "/api/helpOthers.php", {
             'incident_number': incident_number,
             'id': user_data.account,
@@ -807,6 +793,7 @@ angular.module('starter.controllers', [])
         $ionicPopup.alert({
           title: "救援通知送出！(請等候對方確認)"
         });
+        $scope.initialize();
       } else {
         console.log('否');
       }

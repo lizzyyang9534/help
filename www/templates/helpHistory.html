@@ -1,7 +1,7 @@
 <ion-view view-title="拯救紀錄">
-  <ion-content scroll="true">
-    <div ng-controller="HelpHistoryCtrl">
-      <ion-refresher on-refresh="doRefresh()" pulling-text="重新整理"></ion-refresher>
+  <ion-content scroll="true" ng-controller="HelpHistoryCtrl">
+  <ion-refresher on-refresh="doRefresh()" pulling-text="重新整理"></ion-refresher>
+    <div>
       <div class="width-100per padding-30-0 background-2ADCD9 text-align-center color-FFF">
         <div class="font-size-18">YOUR POINTS:</div>
         <div class="margin-top-15 font-size-40">{{ points }}</div>
