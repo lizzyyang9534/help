@@ -14,7 +14,7 @@
         <i class="icon ion-ios-pricetag margin-right-10 text-align-center font-size-22"></i>
         <span class="input-label">標題</span> {{ incident.title }}
       </label>
-      <label ng-show="incident.helper != ''" class="item item-input">
+      <label ng-show="incident.helper != '0'" class="item item-input">
         <i class="icon ion-android-hand margin-right-10 text-align-center font-size-22"></i>
         <span class="input-label">幫助者</span>
         <span id="current_incident_helper">{{ incident.helper }}</span>
@@ -36,16 +36,26 @@
         <span class="input-label">說明</span>
         <div>{{ incident.illust }}</div>
       </label>
-      <label id="rating" class="item item-input" ng-show="incident.status == 'unsolved' || incident.status == 'solved'">
+      <label id="rating" class="item item-input" ng-show="incident.status == 'ask rating' || incident.status == 'solved'">
         <i class="icon ion-trophy margin-right-10 text-align-center font-size-22"></i>
         <span class="input-label">評分</span>
-        <span ng-hide="incident.status == 'unsolved'">{{ incident.rating }}</span>
+        <span ng-hide="incident.status == 'ask rating'">{{ incident.rating }}</span>
       </label>
-      <div id="rating_option" class="button-bar bar-calm background-A8BF7C width-90per margin-auto" ng-show="incident.status == 'unsolved'">
+      <div id="rating_option" class="button-bar bar-calm background-A8BF7C width-90per margin-auto" ng-show="incident.status == 'ask rating'">
         <div class="button button-raised background-A8BF7C ink-dark" ng-click="rating(1)">尚可</div>
         <div class="button button-raised background-A8BF7C ink-dark" ng-click="rating(2)">棒</div>
         <div class="button button-raised background-A8BF7C ink-dark" ng-click="rating(3)">很棒</div>
       </div>
+      <label class="item item-input" ng-show="incident.status == 'matching'">
+        <i class="icon ion-ios-people margin-right-10 text-align-center font-size-22"></i>
+        <span class="input-label">Helpers</span>
+      </label>
+      <ion-list ng-show="incident.status == 'matching'">
+        <ion-radio name="helper_choice" ng-model="data.choice" ng-value="helper.value" ng-repeat="helper in helpers_list">{{ helper.text }}</ion-radio>
+      </ion-list>
+      <div id="helper_choice" style="display: none">{{ data.choice }}</div>
+      <input type="button" value="取消事件" class="button button-calm login_button" ng-show="incident.status == 'no helper'" ng-click="cancelIncident()">
+      <input type="button" value="與Helper配對" class="button button-calm login_button" ng-show="incident.status == 'matching'" ng-click="matchHelper()">
     </div>
   </ion-content>
 </ion-modal-view>

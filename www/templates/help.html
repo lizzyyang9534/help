@@ -8,7 +8,8 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <div class="list">
+    <div class="list" ng-controller="HelpViewCtrl">
+      <div id="current_incident_number" style="display: none;"> {{ help.number }}</div>
       <label class="item item-input">
         <i class="icon ion-ios-pricetag margin-right-10 text-align-center font-size-22"></i>
         <span class="input-label">標題</span> {{ help.title }}
@@ -32,12 +33,13 @@
       <label class="item item-input">
         <i class="icon ion-android-textsms margin-right-10 text-align-center font-size-22"></i>
         <span class="input-label">說明</span>
-        <div class="padding-left-16">{{ help.illust }}</div>
+        <div>{{ help.illust }}</div>
       </label>
       <label class="item item-input" ng-show="help.status == 'solved'">
         <i class="icon ion-trophy margin-right-10 text-align-center font-size-22"></i>
         <span class="input-label">評分</span>{{ help.rating }}
       </label>
+      <input type="button" value="完成事件" class="button button-calm login_button" ng-show="help.status == 'unsolved'" ng-click="solveIncident()">
     </div>
   </ion-content>
 </ion-modal-view>

@@ -21,7 +21,7 @@ angular.module('starter.controllers', [])
 
 .value('mapp', 'yoyoimmappoutside')
 
-.controller('AppCtrl', function($scope, $ionicModal, $ionicPopup, $timeout, $http, $state, $ionicHistory, $localstorage, API, ionicMaterialInk, mapp) {
+.controller('AppCtrl', function($scope, $ionicModal, $ionicPopup, $timeout, $http, $state, $ionicHistory, $localstorage, API, ionicMaterialInk, mapp, $compile) {
   //mapp='yoyoimmapp';
   console.log(mapp);
   // With the new view caching in Ionic, Controllers are only called
@@ -92,7 +92,8 @@ angular.module('starter.controllers', [])
   };
   $scope.incident = function(incident_number) {
     var incident_data = $localstorage.getObject('incident_data');
-    //console.log(incident_data[incident_number]);
+    var helpers = [];
+    var helpers_list = [];
 
     $scope.incident.number = incident_data[incident_number].number;
     $scope.incident.title = incident_data[incident_number].title;
@@ -103,6 +104,19 @@ angular.module('starter.controllers', [])
     $scope.incident.illust = incident_data[incident_number].illust;
     $scope.incident.status = incident_data[incident_number].status;
     $scope.incident.rating = incident_data[incident_number].rating;
+    helpers = incident_data[incident_number].helpers;
+
+    for(i = 0;i < helpers.length;i++){
+      var helper = {};
+      helper.text = helpers[i];
+      helper.value = helpers[i];
+      //console.log(helper);
+      helpers_list.push(helper);
+    }
+    $scope.helpers_list = helpers_list;
+    $scope.data = {
+      choice: ''
+    };
 
     $scope.modal3.show();
   };
@@ -110,6 +124,7 @@ angular.module('starter.controllers', [])
     var help_data = $localstorage.getObject('help_data');
     //console.log(help_data[help_number]);
 
+    $scope.help.number = help_data[help_number].number;
     $scope.help.title = help_data[help_number].title;
     $scope.help.ID = help_data[help_number].ID;
     $scope.help.level = help_data[help_number].level;
@@ -199,9 +214,7 @@ angular.module('starter.controllers', [])
   ionicMaterialInk.displayEffect();
 })
 
-.controller('HomeCtrl', function($scope, $ionicHistory, $state, ionicMaterialInk, $localstorage, $ionicPopup, $timeout) {
-
-
+.controller('HomeCtrl', function($scope, $ionicHistory, $state, ionicMaterialInk, $localstorage, $ionicPopup, $timeout, $ionicPlatform, $location) {
   var check_login = $localstorage.getObject('user_data');
   if (check_login.account == null) {
     //console.log("haven't login");
@@ -209,7 +222,28 @@ angular.module('starter.controllers', [])
   }
 
   $ionicHistory.clearHistory();
+  /*
+    $ionicPlatform.onHardwareBackButton(function() {
+      if ($location.path() === "/app/home") {
+        var confirmPopup = $ionicPopup.confirm({
+          title: 'withU',
+          template: "是否確定要離開應用程式?",
+          cancelText: '取消',
+          okText: '確定'
+        });
 
+        confirmPopup.then(function(res) {
+          if (res) {
+            console.log('You are sure');
+            ionic.Platform.exitApp();
+          } else
+            console.log('You are not sure');
+        });
+      } else {
+        $ionicHistory.goBack();
+      }
+    }, 100);
+  */
   $scope.helpMe = function() {
     $ionicHistory.nextViewOptions({
       disableBack: true
@@ -244,39 +278,13 @@ angular.module('starter.controllers', [])
     });
     $state.go("app.map");
 
-  };
-
-
-
-
+  } 
 
   $scope.helpOthers = function() {
-
-    /*var catchpos = '';
-	navigator.geolocation.getCurrentPosition(function(pos) {
-    catchpos = pos.coords.latitude + "," + pos.coords.longitude;
-
-  }, function(error) {
-    alert('Unable to catch location: ' + error.message);
-  });
-
-
-  $ionicPopup.alert({
-                title: catchpos
-
-              });
-
-	console.log(catchpos);
-
-    $ionicHistory.nextViewOptions({
-      disableBack: true
-    });
-	*/
-
-    $state.go("app.map");
-
-
-  }
+	  $state.go("app.map");
+	     
+}
+  
 
   $scope.callMom = function() {
 
@@ -414,7 +422,9 @@ angular.module('starter.controllers', [])
             password: $scope.passwd,
             name: $scope.name,
             cellphone: $scope.cel,
-            email: $scope.email
+            email: $scope.email,
+            contact_name: $scope.contact_name,
+            contact_cel: $scope.contact_cel
           });
           $ionicHistory.nextViewOptions({
             disableBack: true
@@ -434,7 +444,7 @@ angular.module('starter.controllers', [])
   ionicMaterialInk.displayEffect();
 })
 
-.controller('IncidentCtrl', function($scope, $http, $ionicPopup, $state, $localstorage, ionicMaterialInk) {
+.controller('IncidentCtrl', function($scope, $http, $ionicPopup, $state, $localstorage, ionicMaterialInk, $ionicHistory) {
   $scope.default_date = new Date();
   //$scope.default_time = new Time();
 
@@ -480,6 +490,9 @@ angular.module('starter.controllers', [])
         $ionicPopup.alert({
           title: "新增事件成功！",
         });
+        $ionicHistory.nextViewOptions({
+          disableBack: true
+        });
         $state.go("app.map", {}, {
           reload: true
         }); //導到正確位置
@@ -521,6 +534,61 @@ angular.module('starter.controllers', [])
         console.log('You are not sure');
     });
   }
+
+  $scope.cancelIncident = function() {
+    var confirmPopup = $ionicPopup.confirm({
+      title: '取消事件',
+      template: "確定要取消該事件?",
+      cancelText: '否',
+      okText: '是'
+    });
+
+    confirmPopup.then(function(res) {
+      if (res) {
+        console.log('You are sure');
+        var num = $("#current_incident_number").text();
+        $http.post(serverIP + "/api/cancelIncident.php", {
+            'number': num
+          })
+          .success(function(data, status, headers, config) {
+            console.log(data);
+
+            $scope.closeIncident();
+            $window.location.reload(true);
+          })
+      } else
+        console.log('You are not sure');
+    });
+  }
+
+  $scope.matchHelper = function(){
+    var choice = $("#helper_choice").text();
+    var confirmPopup = $ionicPopup.confirm({
+      title: '與Helper配對',
+      template: "確定要讓" + choice +"協助您?",
+      cancelText: '否',
+      okText: '是'
+    });
+
+    confirmPopup.then(function(res) {
+      if (res) {
+        console.log('You are sure');
+        var num = $("#current_incident_number").text();
+        $http.post(serverIP + "/api/matchHelper.php", {
+            'number': num,
+            'helper': choice
+          })
+          .success(function(data, status, headers, config) {
+            console.log(data);
+
+            $scope.closeIncident();
+            $window.location.reload(true);
+          })
+      } else
+        console.log('You are not sure');
+    });
+  }
+
   ionicMaterialInk.displayEffect();
 })
 
@@ -541,6 +609,8 @@ angular.module('starter.controllers', [])
       $("#incident_history_unsolved").empty();
       $("#incident_history_solved").empty();
       $("#incident_history_noHelper").empty();
+      $("#incident_history_matching").empty();
+      $("#incident_history_askRating").empty();
       $scope.initialize();
       $scope.$broadcast('scroll.refreshComplete');
     }, 1000);
@@ -569,13 +639,21 @@ angular.module('starter.controllers', [])
             add_record = "#incident_history_unsolved";
             $("#incident_history_unsolved_title").show();
           } else if (status == "solved") {
-            icon = "ion-android-checkbox-outline color-A8BF7C font-size-22";
+            icon = "ion-android-happy color-A8BF7C font-size-22";
             add_record = "#incident_history_solved";
             $("#incident_history_solved_title").show();
           } else if (status == "no helper") {
             icon = "ion-android-create color-A8BF7C font-size-22";
             add_record = "#incident_history_noHelper";
             $("#incident_history_noHelper_title").show();
+          } else if (status == "matching") {
+            icon = "ion-android-checkmark-circle color-A8BF7C font-size-22";
+            add_record = "#incident_history_matching";
+            $("#incident_history_matching_title").show();
+          } else if (status == "ask rating") {
+            icon = "ion-android-checkmark-circle color-A8BF7C font-size-22";
+            add_record = "#incident_history_askRating";
+            $("#incident_history_askRating_title").show();
           }
 
           var record = "<ion-item nav-clear menu-close class=\"item-icon-right item-avatar\" ng-click=\"incident(" + number + ")\">" +
@@ -598,6 +676,34 @@ angular.module('starter.controllers', [])
   ionicMaterialInk.displayEffect();
 })
 
+.controller('HelpViewCtrl', function($scope, $http, $ionicPopup, $state, $localstorage, $window, ionicMaterialInk) {
+  $scope.solveIncident = function(){
+    var confirmPopup = $ionicPopup.confirm({
+      title: '完成事件',
+      template: "確定已完成該事件?",
+      cancelText: '否',
+      okText: '是'
+    });
+
+    confirmPopup.then(function(res) {
+      if (res) {
+        console.log('You are sure');
+        var num = $("#current_incident_number").text();
+        $http.post(serverIP + "/api/solveIncident.php", {
+            'number': num
+          })
+          .success(function(data, status, headers, config) {
+            console.log(data);
+
+            $scope.closeIncident();
+            $window.location.reload(true);
+          })
+      } else
+        console.log('You are not sure');
+    });
+  }
+})
+
 .controller('HelpHistoryCtrl', function($scope, $http, $compile, $localstorage, $ionicPopup, ionicMaterialInk, $timeout) {
   var user_data = $localstorage.getObject('user_data');
 
@@ -613,7 +719,9 @@ angular.module('starter.controllers', [])
           $scope.points = new_user_data.points;
         })
       $("#help_history_unsolved").empty();
-      $("#help_history_solvede").empty();
+      $("#help_history_solved").empty();
+      $("#help_history_matching").empty();
+      $("#help_history_askRating").empty();
       $scope.initialize();
       $scope.$broadcast('scroll.refreshComplete');
     }, 1000);
@@ -641,14 +749,26 @@ angular.module('starter.controllers', [])
             var icon;
             var add_record;
 
-            if (status == "unsolved") {
+            if (status == "ask rating") {
               icon = "ion-help-circled color-A8BF7C font-size-22";
-              add_record = "#help_history_unsolved";
-              $("#help_history_unsolved_title").show();
+              add_record = "#help_history_askRating";
+              $("#help_history_askRating_title").show();
             } else if (status == "solved") {
               icon = "ion-ribbon-b color-A8BF7C font-size-22";
               add_record = "#help_history_solved";
               $("#help_history_solved_title").show();
+            } else if (status == "unsolved") {
+              icon = "ion-ribbon-b color-A8BF7C font-size-22";
+              add_record = "#help_history_unsolved";
+              $("#help_history_unsolved_title").show();
+            } else if (status == "matching") {
+              icon = "ion-android-contacts color-A8BF7C font-size-22";
+              add_record = "#help_history_matching";
+              $("#help_history_matching_title").show();
+            } else if (status == "ask rating") {
+              icon = "ion-android-contacts color-A8BF7C font-size-22";
+              add_record = "#help_history_askRating";
+              $("#help_history_askRating_title").show();
             }
 
             var record = "<ion-item nav-clear menu-close id=\"" + number + "\" class=\"item-icon-right item-avatar\" ng-click=\"help(" + number + ")\">" +
@@ -678,14 +798,21 @@ angular.module('starter.controllers', [])
   var user_data = $localstorage.getObject('user_data');
   var allLocation = [];
 
+	var initialLocation;
+	var siberia = new google.maps.LatLng(60, 105);
+	var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
+	var browserSupportFlag =  new Boolean();
+  
   $scope.initialize = function() {
     //$scope.centerOnMe();
+		
+
     var myLatlng = new google.maps.LatLng(23.560803, 120.471977);
 
     //console.log(myLatlng);
 
     var mapOptions = {
-      center: myLatlng,
+      center: initialLocation,//{lat: 23.560803, lng: 120.471977},
       zoom: 16,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
@@ -693,6 +820,23 @@ angular.module('starter.controllers', [])
       mapOptions);
 
 
+	if(navigator.geolocation) {
+		browserSupportFlag = true;
+		navigator.geolocation.getCurrentPosition(function(position) {
+		initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+		map.setCenter(initialLocation);
+		}, function() {
+		handleNoGeolocation(browserSupportFlag);
+		});
+	}
+	// Browser doesn't support Geolocation
+	else {
+		browserSupportFlag = false;
+		handleNoGeolocation(browserSupportFlag);
+	}
+  
+	//map.setCenter(marker.getPosition());
+	  
 
     //Marker + infowindow + angularjs compiled ng-click
 
@@ -746,7 +890,7 @@ angular.module('starter.controllers', [])
           //var anyhelper = "<p>"+allLocation[i].anyhelper+" helper</p>";
           /*var status = "<a ng-show = \"show\" >" + allLocation[i].status+ "</a>"
                         "<a ng-show = \"show=true\" > unsolved </a>";*/
-          var status = "<a>" + allLocation[i].status+ "</a>"
+          var status = "<a>" + allLocation[i].status + "</a>"
           var help_button = "<button class=\"help_button\" ng-click=\"helpcheck(" + num + ")\">HELP</button>";
           var infoContent = "<div>" + '<h5>' + title + status + '</h5>' + '<p>說明> ' + illust + '</p>' + help_button + "</div>";
           //compiled let ng-click works
@@ -758,6 +902,17 @@ angular.module('starter.controllers', [])
 
       });
 
+	  
+	  function handleNoGeolocation(errorFlag) {
+		if (errorFlag == true) {
+		alert("Geolocation service failed.");
+		initialLocation = myLatlng;
+		} else {
+		alert("Your browser doesn't support geolocation.");
+		initialLocation = myLatlng;
+		}
+		map.setCenter(initialLocation);
+	}
 
     function bindInfoWindow(marker, map, infowindow, description) {
       marker.addListener('click', function() {
@@ -780,7 +935,7 @@ angular.module('starter.controllers', [])
     confirmPopup.then(function(res) {
       if (res) {
         console.log('是');
-        console.log('幫助事件號碼:'+incident_number);
+        console.log('幫助事件號碼:' + incident_number);
 
         $http.post(serverIP + "/api/helpOthers.php", {
             'incident_number': incident_number,

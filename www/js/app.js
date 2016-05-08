@@ -14,7 +14,7 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'ngCordova', 'starter.
     // for form inputs)
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-      cordova.plugins.Keyboard.disableScroll(true);
+      cordova.plugins.Keyboard.disableScroll(false);
 
     }
     if (window.StatusBar) {
@@ -22,36 +22,36 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'ngCordova', 'starter.
       StatusBar.styleDefault();
     }
 
-    /*
-    Ionic.io();
-    var push = new Ionic.Push({
-    	"onNotification": function(notification){
-    		alert('Received Notification!');
-    	},
-    	"pluginConfig": {
-    		"android": {
-    			"iconColor": "#0000FF"
-    		}
-    	}
-    });
+      /*
+      Ionic.io();
+      var push = new Ionic.Push({
+      	"onNotification": function(notification){
+      		alert('Received Notification!');
+      	},
+      	"pluginConfig": {
+      		"android": {
+      			"iconColor": "#0000FF"
+      		}
+      	}
+      });
 
-    var user = Ionic.User.current();
+      var user = Ionic.User.current();
 
-    if(!user.id) {
-    	user.id = Ionic.User.anonymousId();
-    }
+      if(!user.id) {
+      	user.id = Ionic.User.anonymousId();
+      }
 
-    user.set('name','dapi');
-    user.set('bio','this is my lt bio');
-    user.save();
-    user.isDirty();
+      user.set('name','dapi');
+      user.set('bio','this is my lt bio');
+      user.save();
+      user.isDirty();
 
-    var callback = function() {
-    	push.addTokenToUser(user);
-    	user.save();
-    };
+      var callback = function() {
+      	push.addTokenToUser(user);
+      	user.save();
+      };
 
-    push.register(callback);*/
+      push.register(callback);*/
 
     var push = new Ionic.Push({
       "debug": true
