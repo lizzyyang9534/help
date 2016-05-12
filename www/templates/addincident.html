@@ -35,8 +35,8 @@
 					</label>
 					<label class="item item-input">
 						<span class="input-label">截止時間</span>
-						<div class="width-150" ng-init="time=default_date;">
-							<input type="time" ng-model="time" required>
+						<div class="width-150" ng-init="time=default_date;" formatted-time>
+							<input type="time" ng-model="time" required formatted-time>
 						</div>
 					</label>
 					<label class="item item-input item-select">
@@ -49,7 +49,6 @@
 								<option value="Taichung">台中</option>
 								<option value="Chiayi">嘉義</option>
 								<option value="Tainan">台南</option>
-								<option value="Space">外太空</option>
 							</select>
 					</label>
 					<!-- <div id="check" ng-class="{'alert':addincident_form.$error.required}" ng-show="addincident_form.$error.required">

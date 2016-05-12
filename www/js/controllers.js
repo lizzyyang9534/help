@@ -90,10 +90,12 @@ angular.module('starter.controllers', [])
   $scope.forgetPassword = function() {
     $scope.modal2.show();
   };
-  $scope.incident = function(incident_number) {
+  $scope.incident = function() {
     var incident_data = $localstorage.getObject('incident_data');
     var helpers = [];
     var helpers_list = [];
+    var incident_number = $("#" + event.currentTarget.id + " span").text();
+    //console.log(incident_number);
 
     $scope.incident.number = incident_data[incident_number].number;
     $scope.incident.title = incident_data[incident_number].title;
@@ -595,6 +597,70 @@ angular.module('starter.controllers', [])
 .controller('IncidentHistoryCtrl', function($scope, $http, $compile, $localstorage, $ionicPopup, ionicMaterialInk, $timeout) {
   var user_data = $localstorage.getObject('user_data');
   var all_incident = [];
+  var incidents = [];
+  var incident_matching = [];
+  var incident_askRating = [];
+  var incident_unsolved = [];
+  var incident_noHelper = [];
+  var incident_solved = [];
+  $scope.current_status = "matching";
+
+  $scope.initialize = function() {
+    $http.post(serverIP + "/api/IncidentHistory.php", {
+        'account': user_data.account
+      })
+      .success(function(data, status, headers, config) {
+        incident_history = data;
+        console.log(incident_history);
+        for (i = 0; i < incident_history.length; i++) {
+          var incident = {};
+          incident.number = incident_history[i].number;
+          incident.title = incident_history[i].title;
+          incident.illust = incident_history[i].illust;
+          incident.status = incident_history[i].status;
+
+          if (incident.status == "matching")
+            incident_matching.push(incident);
+          else if (incident.status == "ask rating")
+            incident_askRating.push(incident);
+          else if (incident.status == "unsolved")
+            incident_unsolved.push(incident);
+          else if (incident.status == "no helper")
+            incident_noHelper.push(incident);
+          else if (incident.status == "solved")
+            incident_solved.push(incident);
+
+          all_incident[incident.number] = incident_history[i];
+        }
+        $scope.incidents = incident_matching;
+        $scope.data = {
+          choice: ''
+        };
+
+        $localstorage.setObject('incident_data', all_incident);
+      })
+  }
+  $scope.initialize();
+
+  $scope.incidentStatus = function(incident_status) {
+    var status_choice = incident_status;
+    $scope.current_status = status_choice;
+    //console.log(status_choice);
+
+    if (status_choice == "matching")
+      $scope.incidents = incident_matching;
+    else if (status_choice == "ask rating")
+      $scope.incidents = incident_askRating;
+    else if (status_choice == "unsolved")
+      $scope.incidents = incident_unsolved;
+    else if (status_choice == "no helper")
+      $scope.incidents = incident_noHelper;
+    else if (status_choice == "solved")
+      $scope.incidents = incident_solved;
+
+    $("div.tabs a").removeClass("active");
+    $("#" + event.currentTarget.id).addClass("active");
+  }
 
   $scope.doRefresh = function() {
     console.log('Refreshing!');
@@ -620,64 +686,6 @@ angular.module('starter.controllers', [])
       $scope.$broadcast('scroll.refreshComplete');
     }, 1000);
   }
-
-  $scope.initialize = function() {
-    $http.post(serverIP + "/api/IncidentHistory.php", {
-        'account': user_data.account
-      })
-      .success(function(data, status, headers, config) {
-        incident_history = data;
-        console.log(incident_history);
-        for (i = 0; i < incident_history.length; i++) {
-          var number = incident_history[i].number;
-          var title = incident_history[i].title;
-          var illust = incident_history[i].illust;
-          var status = incident_history[i].status;
-
-          all_incident[number] = incident_history[i];
-
-          var icon;
-          var add_record;
-
-          if (status == "unsolved") {
-            icon = "ion-android-create color-A8BF7C font-size-22";
-            add_record = "#incident_history_unsolved";
-            $("#incident_history_unsolved_title").show();
-          } else if (status == "solved") {
-            icon = "ion-android-happy color-A8BF7C font-size-22";
-            add_record = "#incident_history_solved";
-            $("#incident_history_solved_title").show();
-          } else if (status == "no helper") {
-            icon = "ion-android-create color-A8BF7C font-size-22";
-            add_record = "#incident_history_noHelper";
-            $("#incident_history_noHelper_title").show();
-          } else if (status == "matching") {
-            icon = "ion-android-checkmark-circle color-A8BF7C font-size-22";
-            add_record = "#incident_history_matching";
-            $("#incident_history_matching_title").show();
-          } else if (status == "ask rating") {
-            icon = "ion-android-checkmark-circle color-A8BF7C font-size-22";
-            add_record = "#incident_history_askRating";
-            $("#incident_history_askRating_title").show();
-          }
-
-          var record = "<ion-item nav-clear menu-close class=\"item-icon-right item-avatar\" ng-click=\"incident(" + number + ")\">" +
-            "<img src=\"img/12970458_962849903770409_2043643368_o.jpg\">" +
-            "<h2>" + title + "</h2>" +
-            "<p>" + illust + "</p>" +
-            "<i class=\"icon " + icon + "\"></i>" +
-            "</ion-item>";
-
-          var record_compile = $compile(record);
-          var nodeOfCompiledDOM = record_compile($scope);
-          $(add_record).append(nodeOfCompiledDOM);
-        }
-
-        $localstorage.setObject('incident_data', all_incident);
-      })
-  }
-  $scope.initialize();
-
   ionicMaterialInk.displayEffect();
 })
 
@@ -807,6 +815,8 @@ angular.module('starter.controllers', [])
   var coupons_category3 = [];
   var coupons_category4 = [];
   var coupons_category5 = [];
+  $scope.current_category = 1;
+
   $http.post(serverIP + "/api/shop.php", {
       'account': user_data.account
     })
@@ -830,8 +840,8 @@ angular.module('starter.controllers', [])
           coupons_category4.push(coupon);
         else if (coupon.category == 5)
           coupons_category5.push(coupon);
-
       }
+
       $scope.coupons = coupons_category1;
       $scope.data = {
         choice: ''
@@ -839,6 +849,7 @@ angular.module('starter.controllers', [])
     })
   $scope.couponCategory = function(category) {
     var catagory_choice = category;
+    $scope.current_category = catagory_choice;
 
     if (catagory_choice == 1)
       $scope.coupons = coupons_category1;
@@ -852,8 +863,9 @@ angular.module('starter.controllers', [])
       $scope.coupons = coupons_category5;
 
     $("div.tabs a").removeClass("active");
-    $(event.currentTarget.id).addClass("active");//待改
+    $("#" + event.currentTarget.id).addClass("active");
   }
+  ionicMaterialInk.displayEffect();
 })
 
 .controller('MapCtrl', function($scope, $http, $ionicLoading, $compile, $state, $window, $ionicPopup, $ionicHistory, $ionicModal, $localstorage, ionicMaterialInk) {

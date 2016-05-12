@@ -1,9 +1,24 @@
 <ion-view view-title="折價券商店" ng-controller="ShopCtrl">
   <ion-content>
-    <div class="font-size-25 padding-10-20 color-f2c34b">
-      <i class="icon ion-fork text-align-center"></i>
-      <i class="icon ion-knife text-align-center"></i>
+    <div class="font-size-25 padding-10-20 color-f2c34b" ng-show="current_category == 1">
+      <i class="icon ion-android-restaurant text-align-center"></i>
       飲食
+    </div>
+    <div class="font-size-25 padding-10-20 color-f2c34b" ng-show="current_category == 2">
+      <i class="icon ion-ios-cart text-align-center"></i>
+      生活
+    </div>
+    <div class="font-size-25 padding-10-20 color-f2c34b" ng-show="current_category == 3">
+      <i class="icon ion-tshirt text-align-center"></i>
+      服飾
+    </div>
+    <div class="font-size-25 padding-10-20 color-f2c34b" ng-show="current_category == 4">
+      <i class="icon ion-android-bus text-align-center"></i>
+      交通
+    </div>
+    <div class="font-size-25 padding-10-20 color-f2c34b" ng-show="current_category == 5">
+      <i class="icon ion-android-film text-align-center"></i>
+      娛樂
     </div>
     <div class="list margin-bottom-50">
       <a class="item item-thumbnail-left coupon" name="coupon" ng-repeat="coupon in coupons">
@@ -18,25 +33,20 @@
   </ion-content>
   <div class="tabs-striped tabs-color-balanced">
     <div class="tabs">
-      <a id="couponCategory1" class="tab-item active" ng-click="couponCategory(1)">
+      <a id="couponCategory1" class="tab-item active ink-dark" ng-click="couponCategory(1)">
         <i class="icon ion-android-restaurant"></i>
-        Test
       </a>
-      <a id="couponCategory2" class="tab-item" ng-click="couponCategory(2)">
+      <a id="couponCategory2" class="tab-item ink-dark" ng-click="couponCategory(2)">
         <i class="icon ion-ios-cart"></i>
-        Favorites
       </a>
-      <a id="couponCategory3" class="tab-item" ng-click="couponCategory(3)">
+      <a id="couponCategory3" class="tab-item ink-dark" ng-click="couponCategory(3)">
         <i class="icon ion-tshirt"></i>
-        Settings
       </a>
-      <a id="couponCategory4" class="tab-item" ng-click="couponCategory(4)">
+      <a id="couponCategory4" class="tab-item ink-dark" ng-click="couponCategory(4)">
         <i class="icon ion-android-bus"></i>
-        Settings
       </a>
-      <a id="couponCategory5" class="tab-item" ng-click="couponCategory(5)">
+      <a id="couponCategory5" class="tab-item ink-dark" ng-click="couponCategory(5)">
         <i class="icon ion-android-film"></i>
-        Settings
       </a>
     </div>
   </div>

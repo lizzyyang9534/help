@@ -1,46 +1,50 @@
 <ion-view view-title="事件紀錄" ng-controller="IncidentHistoryCtrl">
   <ion-content scroll="true">
     <ion-refresher on-refresh="doRefresh()" pulling-text="重新整理"></ion-refresher>
+    <div class="font-size-25 padding-10-20 color-f2c34b" ng-show="current_status == 'matching'">
+      <i class="icon ion-android-contacts margin-right-10 color-11c1f3"></i> <span>等待您的配對</span>
+    </div>
+    <div class="font-size-25 padding-10-20 color-f2c34b" ng-show="current_status == 'ask rating'">
+      <i class="icon ion-help-circled margin-right-10 color-FFDC00"></i> <span>尚未評分</span>
+    </div>
+    <div class="font-size-25 padding-10-20 color-f2c34b" ng-show="current_status == 'unsolved'">
+      <i class="icon ion-help-circled margin-right-10 color-FFDC00"></i> <span>尚未解決</span>
+    </div>
+    <div class="font-size-25 padding-10-20 color-f2c34b" ng-show="current_status == 'no helper'">
+      <i class="icon ion-close-circled margin-right-10 color-E14F2B"></i> 等待協助
+    </div>
+    <div class="font-size-25 padding-10-20 color-f2c34b" ng-show="current_status == 'solved'">
+      <i class="icon ion-checkmark-circled margin-right-10 color-25D665"></i> 已完成
+    </div>
     <ion-list>
-      <div id="incident_history_matching_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
-        <i class="icon ion-android-contacts margin-right-10 color-11c1f3"></i> <span>等待您的配對</span>
+      <div class="list margin-bottom-50">
+        <ion-item nav-clear menu-close id="incident{{incident_row.number}}" class="item-icon-right item-avatar" ng-click="incident()" ng-repeat="incident_row in incidents">
+          <img src="img/12970458_962849903770409_2043643368_o.jpg">
+          <h2>{{ incident_row.title }}</h2>
+          <p>{{ incident_row.illust }}</p>
+          <i class="icon"></i>
+          <span style="display:none">{{incident_row.number}}</span>
+        </ion-item>
       </div>
-      <div id="incident_history_matching" class="list"></div>
-      <div id="incident_history_askRating_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
-        <i class="icon ion-help-circled margin-right-10 color-FFDC00"></i> <span>尚未評分</span>
-      </div>
-      <div id="incident_history_askRating" class="list"></div>
-      <div id="incident_history_unsolved_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
-        <i class="icon ion-help-circled margin-right-10 color-FFDC00"></i> <span>尚未解決</span>
-      </div>
-      <div id="incident_history_unsolved" class="list"></div>
-      <div id="incident_history_noHelper_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
-        <i class="icon ion-close-circled margin-right-10 color-E14F2B"></i> 等待協助
-      </div>
-      <div id="incident_history_noHelper" class="list"></div>
-      <div id="incident_history_solved_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
-        <i class="icon ion-checkmark-circled margin-right-10 color-25D665"></i> 已完成
-      </div>
-      <div id="incident_history_solved" class="list margin-bottom-50"></div>
     </ion-list>
   </ion-content>
-  <div class="tabs-striped tabs-color-balanced" style="">
-      <div class="tabs">
-        <a class="tab-item active" href="#/app/incidentHistory#1">
-          <i class="icon ion-android-contacts"></i>
-        </a>
-        <a class="tab-item" href="#/app/incidentHistory#2">
-          <i class="icon ion-thumbsup"></i>
-        </a>
-        <a class="tab-item" href="#/app/incidentHistory#3">
-          <i class="icon ion-help-circled"></i>
-        </a>
-        <a class="tab-item" href="#/app/incidentHistory#4">
-          <i class="icon ion-close-circled"></i>
-        </a>
-        <a class="tab-item" href="#/app/incidentHistory#5">
-          <i class="icon ion-checkmark-circled"></i>
-        </a>
-      </div>
+  <div class="tabs-striped tabs-color-balanced">
+    <div class="tabs">
+      <a id="incident_status_matching" class="tab-item active" ng-click="incidentStatus('matching')">
+        <i class="icon ion-android-contacts"></i>
+      </a>
+      <a id="incident_status_askRating" class="tab-item" ng-click="incidentStatus('ask rating')">
+        <i class="icon ion-thumbsup"></i>
+      </a>
+      <a id="incident_status_unsolved" class="tab-item" ng-click="incidentStatus('unsolved')">
+        <i class="icon ion-help-circled"></i>
+      </a>
+      <a id="incident_status_noHelper" class="tab-item" ng-click="incidentStatus('no helper')">
+        <i class="icon ion-close-circled"></i>
+      </a>
+      <a id="incident_status_solved" class="tab-item" ng-click="incidentStatus('solved')">
+        <i class="icon ion-checkmark-circled"></i>
+      </a>
     </div>
+  </div>
 </ion-view>
