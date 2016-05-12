@@ -1,0 +1,43 @@
+<ion-view view-title="折價券商店" ng-controller="ShopCtrl">
+  <ion-content>
+    <div class="font-size-25 padding-10-20 color-f2c34b">
+      <i class="icon ion-fork text-align-center"></i>
+      <i class="icon ion-knife text-align-center"></i>
+      飲食
+    </div>
+    <div class="list margin-bottom-50">
+      <a class="item item-thumbnail-left coupon" name="coupon" ng-repeat="coupon in coupons">
+        <img src="img/material2.jpg">
+        <div class="font-size-18 margin-bottom-10">{{ coupon.name }}</div>
+        <div class="margin-bottom-5">{{ coupon.description }}</div>
+        <div class="text-align-right font-size-22">
+          <i class="icon ion-ribbon-b margin-right-10 text-align-center font-size-22"></i>{{ coupon.price }}
+        </div>
+      </a>
+    </div>
+  </ion-content>
+  <div class="tabs-striped tabs-color-balanced">
+    <div class="tabs">
+      <a id="couponCategory1" class="tab-item active" ng-click="couponCategory(1)">
+        <i class="icon ion-android-restaurant"></i>
+        Test
+      </a>
+      <a id="couponCategory2" class="tab-item" ng-click="couponCategory(2)">
+        <i class="icon ion-ios-cart"></i>
+        Favorites
+      </a>
+      <a id="couponCategory3" class="tab-item" ng-click="couponCategory(3)">
+        <i class="icon ion-tshirt"></i>
+        Settings
+      </a>
+      <a id="couponCategory4" class="tab-item" ng-click="couponCategory(4)">
+        <i class="icon ion-android-bus"></i>
+        Settings
+      </a>
+      <a id="couponCategory5" class="tab-item" ng-click="couponCategory(5)">
+        <i class="icon ion-android-film"></i>
+        Settings
+      </a>
+    </div>
+  </div>
+</ion-view>

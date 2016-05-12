@@ -106,7 +106,7 @@ angular.module('starter.controllers', [])
     $scope.incident.rating = incident_data[incident_number].rating;
     helpers = incident_data[incident_number].helpers;
 
-    for(i = 0;i < helpers.length;i++){
+    for (i = 0; i < helpers.length; i++) {
       var helper = {};
       helper.text = helpers[i];
       helper.value = helpers[i];
@@ -278,13 +278,13 @@ angular.module('starter.controllers', [])
     });
     $state.go("app.map");
 
-  } 
+  }
 
   $scope.helpOthers = function() {
-	  $state.go("app.map");
-	     
-}
-  
+    $state.go("app.map");
+
+  }
+
 
   $scope.callMom = function() {
 
@@ -561,11 +561,11 @@ angular.module('starter.controllers', [])
     });
   }
 
-  $scope.matchHelper = function(){
+  $scope.matchHelper = function() {
     var choice = $("#helper_choice").text();
     var confirmPopup = $ionicPopup.confirm({
       title: '與Helper配對',
-      template: "確定要讓" + choice +"協助您?",
+      template: "確定要讓" + choice + "協助您?",
       cancelText: '否',
       okText: '是'
     });
@@ -611,6 +611,11 @@ angular.module('starter.controllers', [])
       $("#incident_history_noHelper").empty();
       $("#incident_history_matching").empty();
       $("#incident_history_askRating").empty();
+      $("#incident_history_unsolved_title").hide();
+      $("#incident_history_usolved_title").hide();
+      $("#incident_history_noHelper").hide();
+      $("#incident_history_matching_title").hide();
+      $("#incident_history_askRating_title").hide();
       $scope.initialize();
       $scope.$broadcast('scroll.refreshComplete');
     }, 1000);
@@ -677,7 +682,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('HelpViewCtrl', function($scope, $http, $ionicPopup, $state, $localstorage, $window, ionicMaterialInk) {
-  $scope.solveIncident = function(){
+  $scope.solveIncident = function() {
     var confirmPopup = $ionicPopup.confirm({
       title: '完成事件',
       template: "確定已完成該事件?",
@@ -722,6 +727,10 @@ angular.module('starter.controllers', [])
       $("#help_history_solved").empty();
       $("#help_history_matching").empty();
       $("#help_history_askRating").empty();
+      $("#help_history_unsolved_title").hide();
+      $("#help_history_solved_title").hide();
+      $("#help_history_matching_title").hide();
+      $("#help_history_askRating_title").hide();
       $scope.initialize();
       $scope.$broadcast('scroll.refreshComplete');
     }, 1000);
@@ -765,10 +774,6 @@ angular.module('starter.controllers', [])
               icon = "ion-android-contacts color-A8BF7C font-size-22";
               add_record = "#help_history_matching";
               $("#help_history_matching_title").show();
-            } else if (status == "ask rating") {
-              icon = "ion-android-contacts color-A8BF7C font-size-22";
-              add_record = "#help_history_askRating";
-              $("#help_history_askRating_title").show();
             }
 
             var record = "<ion-item nav-clear menu-close id=\"" + number + "\" class=\"item-icon-right item-avatar\" ng-click=\"help(" + number + ")\">" +
@@ -794,49 +799,110 @@ angular.module('starter.controllers', [])
   ionicMaterialInk.displayEffect();
 })
 
+.controller('ShopCtrl', function($scope, $http, $ionicLoading, $compile, $state, $ionicPopup, $localstorage, ionicMaterialInk) {
+  var user_data = $localstorage.getObject('user_data');
+  var coupons = [];
+  var coupons_category1 = [];
+  var coupons_category2 = [];
+  var coupons_category3 = [];
+  var coupons_category4 = [];
+  var coupons_category5 = [];
+  $http.post(serverIP + "/api/shop.php", {
+      'account': user_data.account
+    })
+    .success(function(data, status, headers, config) {
+      var allCoupon = data;
+
+      for (i = 0; i < allCoupon.length; i++) {
+        var coupon = {};
+        coupon.id = allCoupon[i].coupon_id;
+        coupon.name = allCoupon[i].coupon_name;
+        coupon.category = allCoupon[i].coupon_category;
+        coupon.description = allCoupon[i].coupon_description;
+        coupon.price = allCoupon[i].coupon_price;
+        if (coupon.category == 1)
+          coupons_category1.push(coupon);
+        else if (coupon.category == 2)
+          coupons_category2.push(coupon);
+        else if (coupon.category == 3)
+          coupons_category3.push(coupon);
+        else if (coupon.category == 4)
+          coupons_category4.push(coupon);
+        else if (coupon.category == 5)
+          coupons_category5.push(coupon);
+
+      }
+      $scope.coupons = coupons_category1;
+      $scope.data = {
+        choice: ''
+      };
+    })
+  $scope.couponCategory = function(category) {
+    var catagory_choice = category;
+    //console.log(catagory_choice);
+    if (catagory_choice == 1){
+      $scope.coupons = coupons_category1;
+    }
+    else if (catagory_choice == 2){
+      $scope.coupons = coupons_category2;
+    }
+    else if (catagory_choice == 3){
+      $scope.coupons = coupons_category3;
+
+    }
+    else if (catagory_choice == 4){
+      $scope.coupons = coupons_category4;
+
+    }
+    else if (catagory_choice == 5){
+      $scope.coupons = coupons_category5;
+
+    }
+    $("div.tabs a").removeClass("active");
+    $(event.currentTarget.id).addClass("active");//待改
+  }
+})
+
 .controller('MapCtrl', function($scope, $http, $ionicLoading, $compile, $state, $window, $ionicPopup, $ionicHistory, $ionicModal, $localstorage, ionicMaterialInk) {
   var user_data = $localstorage.getObject('user_data');
   var allLocation = [];
 
-	var initialLocation;
-	var siberia = new google.maps.LatLng(60, 105);
-	var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
-	var browserSupportFlag =  new Boolean();
-  
+  var initialLocation;
+  var browserSupportFlag = new Boolean();
+
   $scope.initialize = function() {
     //$scope.centerOnMe();
-		
+
 
     var myLatlng = new google.maps.LatLng(23.560803, 120.471977);
 
     //console.log(myLatlng);
 
     var mapOptions = {
-      center: initialLocation,//{lat: 23.560803, lng: 120.471977},
+      center: initialLocation, //{lat: 23.560803, lng: 120.471977},
       zoom: 16,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    var map = new google.maps.Map(document.getElementById("map"),
-      mapOptions);
+    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
+    if (navigator.geolocation) {
+      browserSupportFlag = true;
+      navigator.geolocation.getCurrentPosition(function(position) {
+        initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        console.log(initialLocation.lat());
+        map.setCenter(initialLocation);
+      }, function() {
+        handleNoGeolocation(browserSupportFlag);
+      });
+    }
+    // Browser doesn't support Geolocation
+    else {
+      browserSupportFlag = false;
+      handleNoGeolocation(browserSupportFlag);
+    }
 
-	if(navigator.geolocation) {
-		browserSupportFlag = true;
-		navigator.geolocation.getCurrentPosition(function(position) {
-		initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-		map.setCenter(initialLocation);
-		}, function() {
-		handleNoGeolocation(browserSupportFlag);
-		});
-	}
-	// Browser doesn't support Geolocation
-	else {
-		browserSupportFlag = false;
-		handleNoGeolocation(browserSupportFlag);
-	}
-  
-	//map.setCenter(marker.getPosition());
-	  
+    //map.setCenter(marker.getPosition());
+
 
     //Marker + infowindow + angularjs compiled ng-click
 
@@ -890,9 +956,17 @@ angular.module('starter.controllers', [])
           //var anyhelper = "<p>"+allLocation[i].anyhelper+" helper</p>";
           /*var status = "<a ng-show = \"show\" >" + allLocation[i].status+ "</a>"
                         "<a ng-show = \"show=true\" > unsolved </a>";*/
-          var status = "<a>" + allLocation[i].status + "</a>"
+
           var help_button = "<button class=\"help_button\" ng-click=\"helpcheck(" + num + ")\">HELP</button>";
-          var infoContent = "<div>" + '<h5>' + title + status + '</h5>' + '<p>說明> ' + illust + '</p>' + help_button + "</div>";
+
+          var status = '';
+          if (allLocation[i].status == 'no helper') {
+            status = '<br><i class="icon ion-close-circled margin-right-10 color-E14F2B"> 目前無人協助</i>';
+          } else {
+            status = '<br><i class="icon ion-android-contacts margin-right-10 color-11c1f3"> 配對中</i>';
+          }
+
+          var infoContent = "<div>" + '<h5>' + title + '</h5>' + '<i class="icon ion-chatbubble-working color-A8A8A8"> ' + illust + '</i>' + status + help_button + "</div>";
           //compiled let ng-click works
           var infoCompiled = $compile(infoContent)($scope);
           //+ '<div ng-show="sw">已有人幫助</div>' + '<button class="help_button" ng-click="sw=true" >HELP</button>';
@@ -902,17 +976,17 @@ angular.module('starter.controllers', [])
 
       });
 
-	  
-	  function handleNoGeolocation(errorFlag) {
-		if (errorFlag == true) {
-		alert("Geolocation service failed.");
-		initialLocation = myLatlng;
-		} else {
-		alert("Your browser doesn't support geolocation.");
-		initialLocation = myLatlng;
-		}
-		map.setCenter(initialLocation);
-	}
+
+    function handleNoGeolocation(errorFlag) {
+      if (errorFlag == true) {
+        alert("Geolocation service failed.");
+        initialLocation = myLatlng;
+      } else {
+        alert("Your browser doesn't support geolocation.");
+        initialLocation = myLatlng;
+      }
+      map.setCenter(initialLocation);
+    }
 
     function bindInfoWindow(marker, map, infowindow, description) {
       marker.addListener('click', function() {
@@ -969,6 +1043,7 @@ angular.module('starter.controllers', [])
 
     navigator.geolocation.getCurrentPosition(function(pos) {
       $scope.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+      console.log(pos.coords.latitude + "    " + pos.coords.longitude);
       $ionicLoading.hide();
     }, function(error) {
       alert('Unable to get location: ' + error.message);

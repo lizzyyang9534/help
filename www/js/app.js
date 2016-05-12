@@ -179,6 +179,15 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'ngCordova', 'starter.
     }
   })
 
+  .state('app.shop', {
+    url: '/shop',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/shop.html'
+      }
+    }
+  })
+
   .state('app.contactChoose', {
     url: '/contactChoose',
     views: {

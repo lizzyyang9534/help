@@ -9,7 +9,7 @@ input.ng-dirty.ng-invalid {
   font-size: 18px;
 }
 .home {
-  background: #9BEEC7;
+  background: #F8F8DD;
 }
 @keyframes spin {
     to { transform: rotate(30deg); }
@@ -21,7 +21,7 @@ input.ng-dirty.ng-invalid {
   width: 200px;
   height: 200px;
   border-radius: 100px;
-  background-image: url("../img/earth3.png");
+  background-image: url("../img/earth7.png");
   background-position: center;
   background-repeat: no-repeat;
   text-align: center;
@@ -148,6 +148,11 @@ input.ng-dirty.ng-invalid {
   font-size: 20px;
   color: #FFF;
 }
+.coupon{
+  min-height: 100px;
+  padding-top: 16px;
+  margin:0;
+}
 .logout_button {
   position: absolute;
   bottom: 100 px;
@@ -168,6 +173,9 @@ input.ng-dirty.ng-invalid {
     position: absolute;
     top: 0;
     height: 100%;
+}
+.bottom-0{
+  bottom: 0;
 }
 .float-left{
   float: left;
@@ -208,8 +216,17 @@ input.ng-dirty.ng-invalid {
 .margin-right-20 {
   margin-right: 20px !important;
 }
+.margin-bottom-5 {
+  margin-bottom: 5px !important;
+}
+.margin-bottom-10 {
+  margin-bottom: 10px !important;
+}
 .margin-bottom-20 {
   margin-bottom: 20px !important;
+}
+.margin-bottom-50 {
+  margin-bottom: 50px !important;
 }
 .padding-0 {
   padding: 0;
@@ -222,6 +239,12 @@ input.ng-dirty.ng-invalid {
 }
 .padding-6-10per {
   padding: 6px 10% !important;
+}
+.padding-10-20 {
+  padding: 10px 20px !important;
+}
+.padding-top-16{
+  padding-top: 16px;
 }
 .padding-left-16{
   padding-left: 16px !important;
@@ -277,6 +300,9 @@ input.ng-dirty.ng-invalid {
 .height-25{
   height: 25px !important;
 }
+.min-height-100{
+  min-height: 100px !important;
+}
 .font-size-16 {
   font-size: 16px !important;
 }
@@ -285,6 +311,12 @@ input.ng-dirty.ng-invalid {
 }
 .font-size-22 {
   font-size: 22px !important;
+}
+.font-size-25 {
+  font-size: 25px !important;
+}
+.font-size-30 {
+  font-size: 30px !important;
 }
 .font-size-40 {
   font-size: 40px !important;
@@ -297,6 +329,9 @@ input.ng-dirty.ng-invalid {
 }
 .text-align-left {
   text-align: left;
+}
+.text-align-right {
+  text-align: right;
 }
 .text-align-center {
   text-align: center;
@@ -333,6 +368,9 @@ input.ng-dirty.ng-invalid {
 }
 .color-A8BF7C{
 	color: #A8BF7C;
+}
+.color-f2c34b{
+	color: #f2c34b;
 }
 .background-none{
 	background: none !important;

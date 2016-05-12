@@ -1,27 +1,46 @@
-<ion-view view-title="事件紀錄">
-  <ion-content scroll="true" ng-controller="IncidentHistoryCtrl">
+<ion-view view-title="事件紀錄" ng-controller="IncidentHistoryCtrl">
+  <ion-content scroll="true">
     <ion-refresher on-refresh="doRefresh()" pulling-text="重新整理"></ion-refresher>
-      <ion-list>
-        <div id="incident_history_matching_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
-          <i class="icon ion-android-contacts margin-right-10 color-11c1f3"></i> <span>等待您的配對</span>
-        </div>
-        <div id="incident_history_matching" class="list"></div>
-        <div id="incident_history_askRating_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
-          <i class="icon ion-help-circled margin-right-10 color-FFDC00"></i> <span>尚未評分</span>
-        </div>
-        <div id="incident_history_askRating" class="list"></div>
-        <div id="incident_history_unsolved_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
-          <i class="icon ion-help-circled margin-right-10 color-FFDC00"></i> <span>尚未解決</span>
-        </div>
-        <div id="incident_history_unsolved" class="list"></div>
-        <div id="incident_history_noHelper_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
-          <i class="icon ion-close-circled margin-right-10 color-E14F2B"></i> 等待協助
-        </div>
-        <div id="incident_history_noHelper" class="list"></div>
-        <div id="incident_history_solved_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
-          <i class="icon ion-checkmark-circled margin-right-10 color-25D665"></i> 已完成
-        </div>
-        <div id="incident_history_solved" class="list margin-bottom-20"></div>
-      </ion-list>
+    <ion-list>
+      <div id="incident_history_matching_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
+        <i class="icon ion-android-contacts margin-right-10 color-11c1f3"></i> <span>等待您的配對</span>
+      </div>
+      <div id="incident_history_matching" class="list"></div>
+      <div id="incident_history_askRating_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
+        <i class="icon ion-help-circled margin-right-10 color-FFDC00"></i> <span>尚未評分</span>
+      </div>
+      <div id="incident_history_askRating" class="list"></div>
+      <div id="incident_history_unsolved_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
+        <i class="icon ion-help-circled margin-right-10 color-FFDC00"></i> <span>尚未解決</span>
+      </div>
+      <div id="incident_history_unsolved" class="list"></div>
+      <div id="incident_history_noHelper_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
+        <i class="icon ion-close-circled margin-right-10 color-E14F2B"></i> 等待協助
+      </div>
+      <div id="incident_history_noHelper" class="list"></div>
+      <div id="incident_history_solved_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
+        <i class="icon ion-checkmark-circled margin-right-10 color-25D665"></i> 已完成
+      </div>
+      <div id="incident_history_solved" class="list margin-bottom-50"></div>
+    </ion-list>
   </ion-content>
+  <div class="tabs-striped tabs-color-balanced" style="">
+      <div class="tabs">
+        <a class="tab-item active" href="#/app/incidentHistory#1">
+          <i class="icon ion-android-contacts"></i>
+        </a>
+        <a class="tab-item" href="#/app/incidentHistory#2">
+          <i class="icon ion-thumbsup"></i>
+        </a>
+        <a class="tab-item" href="#/app/incidentHistory#3">
+          <i class="icon ion-help-circled"></i>
+        </a>
+        <a class="tab-item" href="#/app/incidentHistory#4">
+          <i class="icon ion-close-circled"></i>
+        </a>
+        <a class="tab-item" href="#/app/incidentHistory#5">
+          <i class="icon ion-checkmark-circled"></i>
+        </a>
+      </div>
+    </div>
 </ion-view>
