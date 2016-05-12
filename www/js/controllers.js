@@ -839,25 +839,18 @@ angular.module('starter.controllers', [])
     })
   $scope.couponCategory = function(category) {
     var catagory_choice = category;
-    //console.log(catagory_choice);
-    if (catagory_choice == 1){
+
+    if (catagory_choice == 1)
       $scope.coupons = coupons_category1;
-    }
-    else if (catagory_choice == 2){
+    else if (catagory_choice == 2)
       $scope.coupons = coupons_category2;
-    }
-    else if (catagory_choice == 3){
+    else if (catagory_choice == 3)
       $scope.coupons = coupons_category3;
-
-    }
-    else if (catagory_choice == 4){
+    else if (catagory_choice == 4)
       $scope.coupons = coupons_category4;
-
-    }
-    else if (catagory_choice == 5){
+    else if (catagory_choice == 5)
       $scope.coupons = coupons_category5;
 
-    }
     $("div.tabs a").removeClass("active");
     $(event.currentTarget.id).addClass("active");//待改
   }
