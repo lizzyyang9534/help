@@ -124,6 +124,7 @@ angular.module('starter.controllers', [])
   };
   $scope.help = function(help_number) {
     var help_data = $localstorage.getObject('help_data');
+    var help_number = $("#" + event.currentTarget.id + " span").text();
     //console.log(help_data[help_number]);
 
     $scope.help.number = help_data[help_number].number;
@@ -448,6 +449,7 @@ angular.module('starter.controllers', [])
 
 .controller('IncidentCtrl', function($scope, $http, $ionicPopup, $state, $localstorage, ionicMaterialInk, $ionicHistory) {
   $scope.default_date = new Date();
+  //$scope.default_time = new HOUR_SECOND(Date());
   //$scope.default_time = new Time();
 
   var catchpos = "none";
@@ -475,7 +477,6 @@ angular.module('starter.controllers', [])
         'title': $scope.title,
         'illust': $scope.illust,
         'date': $scope.date,
-        'time': $scope.time,
         'location': catchpos
       })
       .success(function(data, status, headers, config) {
@@ -485,7 +486,6 @@ angular.module('starter.controllers', [])
         $scope.title = null;
         $scope.illust = null;
         $scope.date = null;
-        $scope.time = null;
         $scope.location = null;
         $scope.addincident_form.$setPristine();
 
@@ -611,7 +611,14 @@ angular.module('starter.controllers', [])
       })
       .success(function(data, status, headers, config) {
         incident_history = data;
-        console.log(incident_history);
+        //console.log(incident_history);
+        incidents = [];
+        incident_matching = [];
+        incident_askRating = [];
+        incident_unsolved = [];
+        incident_noHelper = [];
+        incident_solved = [];
+
         for (i = 0; i < incident_history.length; i++) {
           var incident = {};
           incident.number = incident_history[i].number;
@@ -672,16 +679,6 @@ angular.module('starter.controllers', [])
           var new_user_data = data;
           $localstorage.setObject('user_data', new_user_data);
         })
-      $("#incident_history_unsolved").empty();
-      $("#incident_history_solved").empty();
-      $("#incident_history_noHelper").empty();
-      $("#incident_history_matching").empty();
-      $("#incident_history_askRating").empty();
-      $("#incident_history_unsolved_title").hide();
-      $("#incident_history_usolved_title").hide();
-      $("#incident_history_noHelper").hide();
-      $("#incident_history_matching_title").hide();
-      $("#incident_history_askRating_title").hide();
       $scope.initialize();
       $scope.$broadcast('scroll.refreshComplete');
     }, 1000);
@@ -719,6 +716,79 @@ angular.module('starter.controllers', [])
 
 .controller('HelpHistoryCtrl', function($scope, $http, $compile, $localstorage, $ionicPopup, ionicMaterialInk, $timeout) {
   var user_data = $localstorage.getObject('user_data');
+  var help_list = [];
+  var help_matching = [];
+  var help_askRating = [];
+  var help_unsolved = [];
+  var help_solved = [];
+  $scope.current_status = "matching";
+
+  $scope.initialize = function() {
+    var all_help = [];
+
+    $scope.points = user_data.points;
+    $http.post(serverIP + "/api/helpHistory.php", {
+        'account': user_data.account
+      })
+      .success(function(data, status, headers, config) {
+        help_history = data;
+        help_list = [];
+        help_matching = [];
+        help_askRating = [];
+        help_unsolved = [];
+        help_solved = [];
+        //console.log(help_history.length);
+
+        if (help_history.length > 0) {
+          for (i = 0; i < help_history.length; i++) {
+            var help = {};
+            help.number = help_history[i].number;
+            help.title = help_history[i].title;
+            help.illust = help_history[i].illust;
+            help.status = help_history[i].status;
+
+            if (help.status == "matching")
+              help_matching.push(help);
+            else if (help.status == "ask rating")
+              help_askRating.push(help);
+            else if (help.status == "unsolved")
+              help_unsolved.push(help);
+            else if (help.status == "solved")
+              help_solved.push(help);
+
+            all_help[help.number] = help_history[i];
+          }
+        } else {
+          $('#none_record').show();
+        }
+        $scope.help_list = help_matching;
+        $scope.data = {
+          choice: ''
+        };
+
+        $localstorage.setObject('help_data', all_help);
+      })
+
+  }
+  $scope.initialize();
+
+  $scope.helpStatus = function(help_status) {
+    var status_choice = help_status;
+    $scope.current_status = status_choice;
+    //console.log(help_status);
+
+    if (status_choice == "matching")
+      $scope.help_list = help_matching;
+    else if (status_choice == "ask rating")
+      $scope.help_list = help_askRating;
+    else if (status_choice == "unsolved")
+      $scope.help_list = help_unsolved;
+    else if (status_choice == "solved")
+      $scope.help_list = help_solved;
+
+    $("div.tabs a").removeClass("active");
+    $("#" + event.currentTarget.id).addClass("active");
+  }
 
   $scope.doRefresh = function() {
     $timeout(function() {
@@ -731,79 +801,10 @@ angular.module('starter.controllers', [])
           $localstorage.setObject('user_data', new_user_data);
           $scope.points = new_user_data.points;
         })
-      $("#help_history_unsolved").empty();
-      $("#help_history_solved").empty();
-      $("#help_history_matching").empty();
-      $("#help_history_askRating").empty();
-      $("#help_history_unsolved_title").hide();
-      $("#help_history_solved_title").hide();
-      $("#help_history_matching_title").hide();
-      $("#help_history_askRating_title").hide();
       $scope.initialize();
       $scope.$broadcast('scroll.refreshComplete');
     }, 1000);
   }
-  $scope.initialize = function() {
-    var all_help = [];
-
-    $scope.points = user_data.points;
-    $http.post(serverIP + "/api/helpHistory.php", {
-        'account': user_data.account
-      })
-      .success(function(data, status, headers, config) {
-        help_history = data;
-        //console.log(help_history.length);
-
-        if (help_history.length > 0) {
-          for (i = 0; i < help_history.length; i++) {
-            var number = help_history[i].number;
-            var title = help_history[i].title;
-            var illust = help_history[i].illust;
-            var status = help_history[i].status;
-
-            all_help[number] = help_history[i];
-
-            var icon;
-            var add_record;
-
-            if (status == "ask rating") {
-              icon = "ion-help-circled color-A8BF7C font-size-22";
-              add_record = "#help_history_askRating";
-              $("#help_history_askRating_title").show();
-            } else if (status == "solved") {
-              icon = "ion-ribbon-b color-A8BF7C font-size-22";
-              add_record = "#help_history_solved";
-              $("#help_history_solved_title").show();
-            } else if (status == "unsolved") {
-              icon = "ion-ribbon-b color-A8BF7C font-size-22";
-              add_record = "#help_history_unsolved";
-              $("#help_history_unsolved_title").show();
-            } else if (status == "matching") {
-              icon = "ion-android-contacts color-A8BF7C font-size-22";
-              add_record = "#help_history_matching";
-              $("#help_history_matching_title").show();
-            }
-
-            var record = "<ion-item nav-clear menu-close id=\"" + number + "\" class=\"item-icon-right item-avatar\" ng-click=\"help(" + number + ")\">" +
-              "<img src=\"img/12970458_962849903770409_2043643368_o.jpg\">" +
-              "<h2>" + title + "</h2>" +
-              "<p>" + illust + "</p>" +
-              "<i class=\"icon " + icon + "\"></i>" +
-              "</ion-item>";
-
-            var record_compile = $compile(record);
-            var nodeOfCompiledDOM = record_compile($scope);
-            $(add_record).append(nodeOfCompiledDOM);
-          }
-        } else {
-          $('#none_record').show();
-        }
-
-        $localstorage.setObject('help_data', all_help);
-      })
-
-  }
-  $scope.initialize();
   ionicMaterialInk.displayEffect();
 })
 
@@ -872,7 +873,7 @@ angular.module('starter.controllers', [])
   var user_data = $localstorage.getObject('user_data');
   var allLocation = [];
 
-  var initialLocation;
+  var initialLocation, distance;
   var browserSupportFlag = new Boolean();
 
   $scope.initialize = function() {
@@ -906,20 +907,14 @@ angular.module('starter.controllers', [])
       handleNoGeolocation(browserSupportFlag);
     }
 
-    //map.setCenter(marker.getPosition());
-
 
     //Marker + infowindow + angularjs compiled ng-click
-
 
     /*var marker = new google.maps.Marker({
       position: myLatlng,
       map: map,
       title: 'Uluru (Ayers Rock)'
     });*/
-
-
-    //var infoWindowContent = '<div>'+title+'</div>';
 
     var infowindow = new google.maps.InfoWindow({
       content: ''
@@ -977,6 +972,9 @@ angular.module('starter.controllers', [])
           //+ '<div ng-show="sw">已有人幫助</div>' + '<button class="help_button" ng-click="sw=true" >HELP</button>';
 
           bindInfoWindow(marker, map, infowindow, infoCompiled);
+
+		  //distance = new google.maps.LatLng(coordinate[0], coordinate[1]).distanceFrom(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+
         }
 
       });
@@ -1118,6 +1116,24 @@ angular.module('starter.controllers', [])
       });
     }
   };
+})
+
+.directive('formattedTime', function ($filter) {
+
+  return {
+    require: '?ngModel',
+    link: function(scope, elem, attr, ngModel) {
+        if( !ngModel )
+            return;
+        if( attr.type !== 'datetime-local' )
+            return;
+
+        ngModel.$formatters.unshift(function(value) {
+            return value.replace(/:[0-9]+.[0-9]+$/, '');
+        });
+    }
+  };
+
 })
 
 .controller('NotificateCtrl', function($scope, $ionicModal, $http, $state, $ionicHistory, $localstorage, ionicMaterialInk) {

@@ -1,27 +1,32 @@
-<ion-view view-title="拯救紀錄">
-  <ion-content scroll="true" ng-controller="HelpHistoryCtrl">
+<ion-view view-title="拯救紀錄" ng-controller="HelpHistoryCtrl">
+  <ion-content scroll="true">
     <ion-refresher on-refresh="doRefresh()" pulling-text="重新整理"></ion-refresher>
     <div class="width-100per padding-30-0 background-2ADCD9 text-align-center color-FFF">
       <div class="font-size-18">YOUR POINTS:</div>
       <div class="margin-top-15 font-size-40">{{ points }}</div>
     </div>
+    <div class="font-size-25 padding-10-20 padding-10-20 color-f2c34b" ng-show="current_status == 'matching'">
+      <i class="icon ion-android-contacts margin-right-10 color-11c1f3"></i> <span>等待求助者配對</span>
+    </div>
+    <div class="font-size-25 padding-10-20 padding-10-20 color-f2c34b" ng-show="current_status == 'ask rating'">
+      <i class="icon ion-help-circled margin-right-10 color-FFDC00"></i> <span>求助者尚未評分</span>
+    </div>
+    <div class="font-size-25 padding-10-20 padding-10-20 color-f2c34b" ng-show="current_status == 'unsolved'">
+      <i class="icon ion-help-circled margin-right-10 color-FFDC00"></i> <span>解決中</span>
+    </div>
+    <div class="font-size-25 padding-10-20 padding-10-20 color-f2c34b" ng-show="current_status == 'solved'">
+      <i class="icon ion-checkmark-circled margin-right-10 color-25D665"></i> 已完成
+    </div>
     <ion-list>
-      <div id="help_history_matching_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
-        <i class="icon ion-android-contacts margin-right-10 color-11c1f3"></i>等待求助者配對
+      <div class="list margin-bottom-50">
+        <ion-item nav-clear menu-close id="help{{help_row.number}}" class="item-icon-right item-avatar" ng-click="help()" ng-repeat="help_row in help_list">
+          <img src="img/12970458_962849903770409_2043643368_o.jpg">
+          <h2>{{ help_row.title }}</h2>
+          <p>{{ help_row.illust }}</p>
+          <i class="icon"></i>
+          <span style="display:none">{{help_row.number}}</span>
+        </ion-item>
       </div>
-      <div id="help_history_matching" class="list"></div>
-      <div id="help_history_askRating_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
-        <i class="icon ion-help-circled margin-right-10 color-FFDC00"></i>求助者尚未評分
-      </div>
-      <div id="help_history_askRating" class="list"></div>
-      <div id="help_history_unsolved_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
-        <i class="icon ion-help-circled margin-right-10 color-FFDC00"></i>解決中
-      </div>
-      <div id="help_history_unsolved" class="list"></div>
-      <div id="help_history_solved_title" class="item item-divider margin-0 font-size-18 border-top-0" style="display: none">
-        <i class="icon ion-checkmark-circled margin-right-10 color-25D665"></i>已完成
-      </div>
-      <div id="help_history_solved" class="list"></div>
     </ion-list>
     <div id="none_record" class="margin-top-20 text-align-center color-B0B0B0" style="display: none">
       <i class="icon ion-sad font-size-60"></i>
@@ -30,4 +35,19 @@
       </div>
     </div>
   </ion-content>
+  <div class="tabs-striped tabs-color-balanced">
+    <div class="tabs">
+      <a id="help_status_matching" class="tab-item active ink-dark" ng-click="helpStatus('matching')">
+        <i class="icon ion-android-contacts"></i>
+      </a>
+      <a id="help_status_askRating" class="tab-item ink-dark" ng-click="helpStatus('ask rating')">
+        <i class="icon ion-thumbsup"></i>
+      </a>
+      <a id="help_status_unsolved" class="tab-item ink-dark" ng-click="helpStatus('unsolved')">
+        <i class="icon ion-help-circled"></i>
+      </a>
+      <a id="help_status_solved" class="tab-item ink-dark" ng-click="helpStatus('solved')">
+        <i class="icon ion-checkmark-circled"></i>
+      </a>
+    </div>
 </ion-view>

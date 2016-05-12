@@ -1,19 +1,19 @@
 <ion-view view-title="事件紀錄" ng-controller="IncidentHistoryCtrl">
   <ion-content scroll="true">
     <ion-refresher on-refresh="doRefresh()" pulling-text="重新整理"></ion-refresher>
-    <div class="font-size-25 padding-10-20 color-f2c34b" ng-show="current_status == 'matching'">
+    <div class="font-size-25 padding-10-20 padding-top-20 color-f2c34b" ng-show="current_status == 'matching'">
       <i class="icon ion-android-contacts margin-right-10 color-11c1f3"></i> <span>等待您的配對</span>
     </div>
-    <div class="font-size-25 padding-10-20 color-f2c34b" ng-show="current_status == 'ask rating'">
-      <i class="icon ion-help-circled margin-right-10 color-FFDC00"></i> <span>尚未評分</span>
+    <div class="font-size-25 padding-10-20 padding-top-20 color-f2c34b" ng-show="current_status == 'ask rating'">
+      <i class="icon ion-thumbsup margin-right-10 color-FFDC00"></i> <span>尚未評分</span>
     </div>
-    <div class="font-size-25 padding-10-20 color-f2c34b" ng-show="current_status == 'unsolved'">
+    <div class="font-size-25 padding-10-20 padding-top-20 color-f2c34b" ng-show="current_status == 'unsolved'">
       <i class="icon ion-help-circled margin-right-10 color-FFDC00"></i> <span>尚未解決</span>
     </div>
-    <div class="font-size-25 padding-10-20 color-f2c34b" ng-show="current_status == 'no helper'">
+    <div class="font-size-25 padding-10-20 padding-top-20 color-f2c34b" ng-show="current_status == 'no helper'">
       <i class="icon ion-close-circled margin-right-10 color-E14F2B"></i> 等待協助
     </div>
-    <div class="font-size-25 padding-10-20 color-f2c34b" ng-show="current_status == 'solved'">
+    <div class="font-size-25 padding-10-20 padding-top-20 color-f2c34b" ng-show="current_status == 'solved'">
       <i class="icon ion-checkmark-circled margin-right-10 color-25D665"></i> 已完成
     </div>
     <ion-list>
@@ -30,19 +30,19 @@
   </ion-content>
   <div class="tabs-striped tabs-color-balanced">
     <div class="tabs">
-      <a id="incident_status_matching" class="tab-item active" ng-click="incidentStatus('matching')">
+      <a id="incident_status_matching" class="tab-item active ink-dark" ng-click="incidentStatus('matching')">
         <i class="icon ion-android-contacts"></i>
       </a>
-      <a id="incident_status_askRating" class="tab-item" ng-click="incidentStatus('ask rating')">
+      <a id="incident_status_askRating" class="tab-item ink-dark" ng-click="incidentStatus('ask rating')">
         <i class="icon ion-thumbsup"></i>
       </a>
-      <a id="incident_status_unsolved" class="tab-item" ng-click="incidentStatus('unsolved')">
+      <a id="incident_status_unsolved" class="tab-item ink-dark" ng-click="incidentStatus('unsolved')">
         <i class="icon ion-help-circled"></i>
       </a>
-      <a id="incident_status_noHelper" class="tab-item" ng-click="incidentStatus('no helper')">
+      <a id="incident_status_noHelper" class="tab-item ink-dark" ng-click="incidentStatus('no helper')">
         <i class="icon ion-close-circled"></i>
       </a>
-      <a id="incident_status_solved" class="tab-item" ng-click="incidentStatus('solved')">
+      <a id="incident_status_solved" class="tab-item ink-dark" ng-click="incidentStatus('solved')">
         <i class="icon ion-checkmark-circled"></i>
       </a>
     </div>
