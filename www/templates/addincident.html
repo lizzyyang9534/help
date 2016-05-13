@@ -1,37 +1,42 @@
-<ion-view view-title="HELP ME !">
+<ion-view view-title="啾啾我">
 	<ion-content>
 		<meta charset="utf-8">
 		<div class="list">
 			<div ng-controller="IncidentCtrl">
 				<form name="addincident_form">
+					<label class="item item-input">
+						<i class="icon ion-ios-pricetag margin-right-10 text-align-center font-size-22"></i>
+						<span class="input-label">標題</span>
+						<input type="text" ng-model="title" placeholder="請輸入事件標題" required>
+					</label>
 					<label class="item item-input item-select">
-						<div class="input-label" >事件重要程度</div>
+						<i class="icon ion-android-alert margin-right-10 text-align-center font-size-22"></i>
+						<div class="input-label" >重要程度</div>
 						<select ng-model="level" required>
 							<option value="emergency" class="addincident_lv_em">Emergency</option>
-							<option value="common" class="addincident_lv_co" selected>Common</option>
+							<option value="common" class="addincident_lv_co" selected="selected">Common</option>
 						</select>
 					</label>
 					<label class="item item-input item-select">
-						<div class="input-label" >分類</div>
+						<i class="icon ion-more margin-right-10 text-align-center font-size-22"></i>
+						<div class="input-label" >種類</div>
 						<select ng-model="category" required>
-							<option value="borrow" selected>Borrow</option>
+							<option value="borrow" selected="selected">Borrow</option>
 							<option value="trip">Trip</option>
 							<option value="eat">Eat</option>
 						</select>
 					</label>
 					<label class="item item-input">
-						<span class="input-label">主題</span>
-						<input type="text" ng-model="title" placeholder="半夜肚子餓想吃民雄廟口碳烤雞排" required>
-					</label>
-					<label class="item item-input">
-						<span class="input-label">說明</span>
-						<input type="text" ng-model="illust" placeholder="請告訴大家能如何幫助你，並說明事件" required>
-					</label>
-					<label class="item item-input">
-						<span class="input-label">截止日期</span>
+						<i class="icon ion-android-calendar margin-right-10 text-align-center font-size-22"></i>
+						<span class="input-label">期限</span>
 						<div class="width-160" ng-init="date=default_date;" formatted-time>
 							<input type="datetime-local" ng-model="date" required formatted-time>
 						</div>
+					</label>
+					<label class="item item-input">
+						<i class="icon ion-android-textsms margin-right-10 text-align-center font-size-22"></i>
+						<span class="input-label">說明</span>
+						<input type="text" ng-model="illust" placeholder="請告訴大家能如何幫助你" required>
 					</label>
 					<!-- <label class="item item-input">
 						<span class="input-label">截止時間</span>
@@ -42,7 +47,7 @@
 					<label class="item item-input item-select">
 						<div class="input-label">所在位置</div>
 							<select ng-model="location" required>
-								<option value="Current" selected>使用您目前的位置</option>
+								<option value="Current" selected="selected">使用您目前的位置</option>
 								<option value="Taipei">台北</option>
 								<option value="Taoyuan">桃園</option>
 								<option value="Hsinchu">新竹</option>
@@ -54,7 +59,7 @@
 					<!-- <div id="check" ng-class="{'alert':addincident_form.$error.required}" ng-show="addincident_form.$error.required">
 						欄位不可有空
 					</div>-->
-					<input type="button" value="submit" class="button button-calm home_button margin-top-15" ng-click="addincident()">
+					<input type="button" value="submit" class="button button-calm home_button margin-top-15 background-43A143" ng-click="addincident()">
 				</form>
 			</div>
 		</div>

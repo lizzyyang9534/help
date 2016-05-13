@@ -603,9 +603,9 @@ angular.module('starter.controllers', [])
   var incident_unsolved = [];
   var incident_noHelper = [];
   var incident_solved = [];
-  $scope.current_status = "matching";
 
   $scope.initialize = function() {
+    $scope.current_status = "matching";
     $http.post(serverIP + "/api/IncidentHistory.php", {
         'account': user_data.account
       })
@@ -680,6 +680,8 @@ angular.module('starter.controllers', [])
           $localstorage.setObject('user_data', new_user_data);
         })
       $scope.initialize();
+      $("div.tabs a").removeClass("active");
+      $("#incident_status_matching").addClass("active");
       $scope.$broadcast('scroll.refreshComplete');
     }, 1000);
   }
@@ -721,12 +723,12 @@ angular.module('starter.controllers', [])
   var help_askRating = [];
   var help_unsolved = [];
   var help_solved = [];
-  $scope.current_status = "matching";
 
   $scope.initialize = function() {
     var all_help = [];
-
     $scope.points = user_data.points;
+    $scope.current_status = "matching";
+
     $http.post(serverIP + "/api/helpHistory.php", {
         'account': user_data.account
       })
@@ -802,87 +804,199 @@ angular.module('starter.controllers', [])
           $scope.points = new_user_data.points;
         })
       $scope.initialize();
+      $("div.tabs a").removeClass("active");
+      $("#help_status_matching").addClass("active");
       $scope.$broadcast('scroll.refreshComplete');
     }, 1000);
   }
   ionicMaterialInk.displayEffect();
 })
 
-.controller('ShopCtrl', function($scope, $http, $ionicLoading, $compile, $state, $ionicPopup, $localstorage, ionicMaterialInk) {
-  var user_data = $localstorage.getObject('user_data');
-  var coupons = [];
-  var coupons_category1 = [];
-  var coupons_category2 = [];
-  var coupons_category3 = [];
-  var coupons_category4 = [];
-  var coupons_category5 = [];
-  $scope.current_category = 1;
+.controller('ShopCtrl', function($scope, $http, $ionicLoading, $compile, $state, $timeout, $ionicPopup, $localstorage, ionicMaterialInk) {
+    var user_data = $localstorage.getObject('user_data');
+    var coupons = [];
+    var coupons_category1 = [];
+    var coupons_category2 = [];
+    var coupons_category3 = [];
+    var coupons_category4 = [];
+    var coupons_category5 = [];
 
-  $http.post(serverIP + "/api/shop.php", {
-      'account': user_data.account
-    })
-    .success(function(data, status, headers, config) {
-      var allCoupon = data;
 
-      for (i = 0; i < allCoupon.length; i++) {
-        var coupon = {};
-        coupon.id = allCoupon[i].coupon_id;
-        coupon.name = allCoupon[i].coupon_name;
-        coupon.category = allCoupon[i].coupon_category;
-        coupon.description = allCoupon[i].coupon_description;
-        coupon.price = allCoupon[i].coupon_price;
-        if (coupon.category == 1)
-          coupons_category1.push(coupon);
-        else if (coupon.category == 2)
-          coupons_category2.push(coupon);
-        else if (coupon.category == 3)
-          coupons_category3.push(coupon);
-        else if (coupon.category == 4)
-          coupons_category4.push(coupon);
-        else if (coupon.category == 5)
-          coupons_category5.push(coupon);
-      }
+    $scope.initialize = function() {
+        $scope.points = user_data.points;
+        $scope.current_category = 1;
+        coupons_category1 = [];
+        coupons_category2 = [];
+        coupons_category3 = [];
+        coupons_category4 = [];
+        coupons_category5 = [];
 
-      $scope.coupons = coupons_category1;
-      $scope.data = {
-        choice: ''
-      };
-    })
-  $scope.couponCategory = function(category) {
-    var catagory_choice = category;
-    $scope.current_category = catagory_choice;
+        $http.post(serverIP + "/api/shop.php", {
+                'account': user_data.account
+            })
+            .success(function(data, status, headers, config) {
+                var allCoupon = data;
 
-    if (catagory_choice == 1)
-      $scope.coupons = coupons_category1;
-    else if (catagory_choice == 2)
-      $scope.coupons = coupons_category2;
-    else if (catagory_choice == 3)
-      $scope.coupons = coupons_category3;
-    else if (catagory_choice == 4)
-      $scope.coupons = coupons_category4;
-    else if (catagory_choice == 5)
-      $scope.coupons = coupons_category5;
+                for (i = 0; i < allCoupon.length; i++) {
+                    var coupon = {};
+                    coupon.id = allCoupon[i].coupon_id;
+                    coupon.name = allCoupon[i].coupon_name;
+                    coupon.category = allCoupon[i].coupon_category;
+                    coupon.description = allCoupon[i].coupon_description;
+                    coupon.price = allCoupon[i].coupon_price;
+                    if (coupon.category == 1)
+                        coupons_category1.push(coupon);
+                    else if (coupon.category == 2)
+                        coupons_category2.push(coupon);
+                    else if (coupon.category == 3)
+                        coupons_category3.push(coupon);
+                    else if (coupon.category == 4)
+                        coupons_category4.push(coupon);
+                    else if (coupon.category == 5)
+                        coupons_category5.push(coupon);
+                }
 
-    $("div.tabs a").removeClass("active");
-    $("#" + event.currentTarget.id).addClass("active");
-  }
-  ionicMaterialInk.displayEffect();
+                $scope.coupons = coupons_category1;
+                $scope.data = {
+                    choice: ''
+                };
+            })
+    }
+    $scope.initialize();
+    $scope.couponCategory = function(category) {
+        var catagory_choice = category;
+        $scope.current_category = catagory_choice;
+
+        if (catagory_choice == 1)
+            $scope.coupons = coupons_category1;
+        else if (catagory_choice == 2)
+            $scope.coupons = coupons_category2;
+        else if (catagory_choice == 3)
+            $scope.coupons = coupons_category3;
+        else if (catagory_choice == 4)
+            $scope.coupons = coupons_category4;
+        else if (catagory_choice == 5)
+            $scope.coupons = coupons_category5;
+
+        $("div.tabs a").removeClass("active");
+        $("#" + event.currentTarget.id).addClass("active");
+    }
+
+    $scope.doRefresh = function() {
+      $timeout(function() {
+        $http.post(serverIP + "/api/getMemberData.php", {
+            'account': user_data.account
+          })
+          .success(function(data, status, headers, config) {
+            var new_user_data = data;
+            //console.log(new_user_data);
+            $localstorage.setObject('user_data', new_user_data);
+            $scope.points = new_user_data.points;
+          })
+        $scope.initialize();
+        $("div.tabs a").removeClass("active");
+        $("#couponCategory1").addClass("active");
+        $scope.$broadcast('scroll.refreshComplete');
+      }, 1000);
+    }
+    ionicMaterialInk.displayEffect();
+})
+
+.controller('MyCouponCtrl', function($scope, $http, $ionicLoading, $compile, $state, $timeout, $ionicPopup, $localstorage, ionicMaterialInk) {
+    var user_data = $localstorage.getObject('user_data');
+    var coupons = [];
+    var coupons_category1 = [];
+    var coupons_category2 = [];
+    var coupons_category3 = [];
+    var coupons_category4 = [];
+    var coupons_category5 = [];
+
+
+    $scope.initialize = function() {
+        $scope.current_category = 1;
+        coupons_category1 = [];
+        coupons_category2 = [];
+        coupons_category3 = [];
+        coupons_category4 = [];
+        coupons_category5 = [];
+
+        $http.post(serverIP + "/api/getMemberCoupons.php", {
+                'account': user_data.account
+            })
+            .success(function(data, status, headers, config) {
+                var allCoupon = data;
+                console.log(allCoupon);
+
+                for (i = 0; i < allCoupon.length; i++) {
+                    var coupon = {};
+                    coupon.id = allCoupon[i].coupon_id;
+                    coupon.name = allCoupon[i].coupon_name;
+                    coupon.category = allCoupon[i].coupon_category;
+                    coupon.description = allCoupon[i].coupon_description;
+                    coupon.price = allCoupon[i].coupon_price;
+                    if (coupon.category == 1)
+                        coupons_category1.push(coupon);
+                    else if (coupon.category == 2)
+                        coupons_category2.push(coupon);
+                    else if (coupon.category == 3)
+                        coupons_category3.push(coupon);
+                    else if (coupon.category == 4)
+                        coupons_category4.push(coupon);
+                    else if (coupon.category == 5)
+                        coupons_category5.push(coupon);
+                }
+
+                $scope.mycoupons = coupons_category1;
+                $scope.data = {
+                    choice: ''
+                };
+            })
+    }
+    $scope.initialize();
+    $scope.couponCategory = function(category) {
+        var catagory_choice = category;
+        $scope.current_category = catagory_choice;
+
+        if (catagory_choice == 1)
+            $scope.mycoupons = coupons_category1;
+        else if (catagory_choice == 2)
+            $scope.mycoupons = coupons_category2;
+        else if (catagory_choice == 3)
+            $scope.mycoupons = coupons_category3;
+        else if (catagory_choice == 4)
+            $scope.mycoupons = coupons_category4;
+        else if (catagory_choice == 5)
+            $scope.mycoupons = coupons_category5;
+
+        $("div.tabs a").removeClass("active");
+        $("#" + event.currentTarget.id).addClass("active");
+    }
+
+    $scope.doRefresh = function() {
+      $timeout(function() {
+        $scope.initialize();
+        $("div.tabs a").removeClass("active");
+        $("#myCouponCategory1").addClass("active");
+        $scope.$broadcast('scroll.refreshComplete');
+      }, 1000);
+    }
+    ionicMaterialInk.displayEffect();
 })
 
 .controller('MapCtrl', function($scope, $http, $ionicLoading, $compile, $state, $window, $ionicPopup, $ionicHistory, $ionicModal, $localstorage, ionicMaterialInk) {
   var user_data = $localstorage.getObject('user_data');
   var allLocation = [];
-
-  var initialLocation, distance;
+  //var distance;
+  var initialLocation;
   var browserSupportFlag = new Boolean();
-
+  var p1 = new google.maps.LatLng(45.463688, 9.18814);
+  var p2 = new google.maps.LatLng(46.0438317, 9.75936230000002);
   $scope.initialize = function() {
     //$scope.centerOnMe();
 
 
     var myLatlng = new google.maps.LatLng(23.560803, 120.471977);
 
-    //console.log(myLatlng);
 
     var mapOptions = {
       center: initialLocation, //{lat: 23.560803, lng: 120.471977},
@@ -910,15 +1024,19 @@ angular.module('starter.controllers', [])
 
     //Marker + infowindow + angularjs compiled ng-click
 
-    /*var marker = new google.maps.Marker({
-      position: myLatlng,
-      map: map,
-      title: 'Uluru (Ayers Rock)'
-    });*/
+
+
+    var marker = new google.maps.Marker({
+      position: initialLocation,
+      map: map
+      //icon: cicon,
+    });
 
     var infowindow = new google.maps.InfoWindow({
       content: ''
     });
+
+	//alert(calcDistance(p1, p2)); ccccccccccccccccccccccccccccccccccccc
 
     $http.post(serverIP + "/api/incidentLocation.php", {
         'test': "test"
@@ -934,7 +1052,7 @@ angular.module('starter.controllers', [])
           var title = allLocation[i].title;
           var illust = allLocation[i].illust;
           var num = allLocation[i].number;
-
+          //console.log(allLocation[i].date);
           var icon = {
 
             url: "img/emergency_marker.png", // url
@@ -957,6 +1075,7 @@ angular.module('starter.controllers', [])
           /*var status = "<a ng-show = \"show\" >" + allLocation[i].status+ "</a>"
                         "<a ng-show = \"show=true\" > unsolved </a>";*/
 
+          var dt = '<br><i class="icon ion-calendar margin-right-10"> 截止時間:</i><br>'+ allLocation[i].date ;
           var help_button = "<button class=\"help_button\" ng-click=\"helpcheck(" + num + ")\">HELP</button>";
 
           var status = '';
@@ -966,18 +1085,20 @@ angular.module('starter.controllers', [])
             status = '<br><i class="icon ion-android-contacts margin-right-10 color-11c1f3"> 配對中</i>';
           }
 
-          var infoContent = "<div>" + '<h5>' + title + '</h5>' + '<i class="icon ion-chatbubble-working color-A8A8A8"> ' + illust + '</i>' + status + help_button + "</div>";
+          var infoContent = "<div>" + '<h5>' + title + '</h5>' + '<i class="icon ion-chatbubble-working color-A8A8A8"> ' + illust + '</i>' + dt + status + help_button + "</div>";
           //compiled let ng-click works
           var infoCompiled = $compile(infoContent)($scope);
           //+ '<div ng-show="sw">已有人幫助</div>' + '<button class="help_button" ng-click="sw=true" >HELP</button>';
 
           bindInfoWindow(marker, map, infowindow, infoCompiled);
-
-		  //distance = new google.maps.LatLng(coordinate[0], coordinate[1]).distanceFrom(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
-
         }
 
       });
+
+
+    function calcDistance(p1, p2) {
+	return (google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000).toFixed(2);
+	}
 
 
     function handleNoGeolocation(errorFlag) {

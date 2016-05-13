@@ -1,5 +1,5 @@
 <ion-modal-view>
-  <ion-header-bar class="bar-calm">
+  <ion-header-bar class="bar-calm background-B4E065">
     <h1 class="title">會員註冊</h1>
     <div class="buttons">
       <button class="button button-clear" ng-click="closeRegister()">
@@ -11,7 +11,9 @@
     <div ng-controller="RegisterCtrl">
       <form name="register_form">
         <div class="list">
-          <div class="item item-divider margin-0 font-size-18 border-bottom-11c1f3">基本資料</div>
+          <div class="item item-divider margin-0 font-size-18">
+            <i class="ion-android-clipboard margin-right-10 color-A8BF7C font-size-22"></i>基本資料
+          </div>
           <label class="item item-input">
             <i class="icon ion-android-contact margin-right-10 text-align-center"></i>
             <span class="input-label">帳號*</span>
@@ -54,7 +56,9 @@
         </div>
 
         <div class="list">
-          <div class="item item-divider margin-0 font-size-18 border-bottom-11c1f3">緊急聯絡人</div>
+          <div class="item item-divider margin-0 font-size-18">
+            <i class="ion-android-call margin-right-10 color-A8BF7C font-size-22"></i>緊急聯絡人
+          </div>
           <label class="item item-input">
             <i class="icon ion-android-person margin-right-10 text-align-center"></i>
             <span class="input-label">聯絡人姓名*</span>
@@ -84,7 +88,7 @@
           <div class="alert" ng-show="register_form.contact_name.$dirty && register_form.contact_cel.$dirty">
             <div ng-show="register_form.contact_name.$error.required || register_form.contact_cel.$error.required">請填寫緊急聯絡人資訊</div>
           </div>
-          <input id="submit_button" type="button" value="送出" class="button button-calm login_button margin-bottom-20" ng-click="insertdata()">
+          <input id="submit_button" type="button" value="送出" class="button button-calm login_button margin-bottom-20 background-43A143" ng-click="insertdata()">
         </div>
       </form>
     </div>

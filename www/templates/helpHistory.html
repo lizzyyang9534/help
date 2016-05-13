@@ -1,10 +1,6 @@
 <ion-view view-title="拯救紀錄" ng-controller="HelpHistoryCtrl">
   <ion-content scroll="true">
     <ion-refresher on-refresh="doRefresh()" pulling-text="重新整理"></ion-refresher>
-    <div class="width-100per padding-30-0 background-2ADCD9 text-align-center color-FFF">
-      <div class="font-size-18">YOUR POINTS:</div>
-      <div class="margin-top-15 font-size-40">{{ points }}</div>
-    </div>
     <div class="font-size-25 padding-10-20 padding-10-20 color-f2c34b" ng-show="current_status == 'matching'">
       <i class="icon ion-android-contacts margin-right-10 color-11c1f3"></i> <span>等待求助者配對</span>
     </div>

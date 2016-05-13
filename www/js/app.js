@@ -188,6 +188,15 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'ngCordova', 'starter.
     }
   })
 
+  .state('app.myCoupon', {
+    url: '/myCoupon',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/myCoupon.html'
+      }
+    }
+  })
+
   .state('app.contactChoose', {
     url: '/contactChoose',
     views: {

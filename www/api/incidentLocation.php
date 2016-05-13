@@ -11,7 +11,8 @@ try{
 		$title = $rowResult["title"];
 		$illust = $rowResult["illust"];
 		$level = $rowResult["level"];
-	  $oneLocation = array("ID" => $id, "location" => $location, "title" => $title, "illust" => $illust, "level" => $level);
+		$date = $rowResult["date"];
+	  $oneLocation = array("ID" => $id, "location" => $location, "title" => $title, "illust" => $illust, "level" => $level, "date" => $date);
     array_push($allLocation, $oneLocation);
 	}
   echo json_encode($allLocation);
