@@ -1,68 +1,73 @@
-﻿<ion-view view-title="修改資料">
-    <ion-content>
+<ion-modal-view>
+  <ion-header-bar class="bar-calm background-B4E065">
+    <h1 class="title">修改資料</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeEditMember()">
+        <i class="ion-close-round margin-right-10 text-align-center"></i>
+      </button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <div ng-controller="MemberCtrl">
+      <form name="edit_form">
         <div class="list">
-            <div ng-controller="MemberCtrl">
-                <form name="edit_form">
-                    <label class="item item-input">
-                        <i class="icon ion-android-contact margin-right-10 text-align-center"></i>
-                        <span class="input-label">帳號</span>
-                        <input type="text" id="account" name="account" ng-model="account" class="background-none" ng-disabled="true">
-                    </label>
-                    <label class="item item-input">
-                        <i class="icon ion-locked margin-right-10 text-align-center"></i>
-                        <span class="input-label">密碼</span>
-                        <input type="password" id="passwd" name="passwd" ng-model="passwd" pw-account-check="account" placeholder="密碼" required ng-minlength="8" ng-maxlength="20">
-                    </label>
-                    <label class="item item-input">
-                        <i class="icon ion-checkmark-circled margin-right-10 text-align-center"></i>
-                        <span class="input-label">確認密碼</span>
-                        <input type="password" name="passwd_check" ng-model="passwd_check" pw-check="passwd" placeholder="請再輸入一次密碼">
-                    </label>
-                    <label class="item item-input">
-                        <i class="icon ion-android-person margin-right-10 text-align-center"></i>
-                        <span class="input-label">姓名</span>
-                        <input type="text" name="name" ng-model="name" required>
-                    </label>
-                    <label class="item item-input">
-                        <i class="icon ion-iphone margin-right-10 text-align-center"></i>
-                        <span class="input-label">手機</span>
-                        <input type="text" ng-model="cel">
-                    </label>
-                    <label class="item item-input">
-                        <i class="icon ion-email margin-right-10 text-align-center"></i>
-                        <span class="input-label">Email</span>
-                        <input type="email" name="email" ng-model="email" required>
-                    </label>
-					<label class="item item-input">
-						<i class="icon ion-android-person margin-right-10 text-align-center"></i>
-						<span class="input-label">緊急聯絡人姓名</span>
-						<input type="text" name="contact_name" ng-model="contact_name" placeholder="聯絡人姓名" required>
-					</label>
-					<label class="item item-input">
-						<i class="icon ion-iphone margin-right-10 text-align-center"></i>
-						<span class="input-label">緊急聯絡人電話</span>
-						<input type="text" name="contact_cel" ng-model="contact_cel" placeholder="聯絡人電話" required>
-					</label>
+          <label class="item item-input">
+            <i class="icon ion-android-contact margin-right-10 text-align-center"></i>
+            <span class="input-label">帳號</span>
+            <input type="text" id="account_edit" name="account_edit" ng-model="account_edit" class="background-none" ng-disabled="true">
+          </label>
+          <label class="item item-input">
+            <i class="icon ion-locked margin-right-10 text-align-center"></i>
+            <span class="input-label">密碼</span>
+            <input type="password" id="passwd_edit" name="passwd_edit" ng-model="passwd_edit" pw-account-check="account_edit" placeholder="密碼" required ng-minlength="8" ng-maxlength="20">
+          </label>
+          <label class="item item-input">
+            <i class="icon ion-checkmark-circled margin-right-10 text-align-center"></i>
+            <span class="input-label">確認密碼</span>
+            <input type="password" name="passwd__edit_check" ng-model="passwd__edit_check" pw-check="passwd_edit" placeholder="請再輸入一次密碼">
+          </label>
+          <label class="item item-input">
+            <i class="icon ion-android-person margin-right-10 text-align-center"></i>
+            <span class="input-label">姓名</span>
+            <input type="text" name="name_edit" ng-model="name_edit" required>
+          </label>
+          <label class="item item-input">
+            <i class="icon ion-iphone margin-right-10 text-align-center"></i>
+            <span class="input-label">手機</span>
+            <input type="text" ng-model="cel_edit">
+          </label>
+          <label class="item item-input">
+            <i class="icon ion-email margin-right-10 text-align-center"></i>
+            <span class="input-label">Email</span>
+            <input type="email" name="email_edit" ng-model="email_edit" required>
+          </label>
+          <label class="item item-input">
+            <i class="icon ion-android-person margin-right-10 text-align-center"></i>
+            <span class="input-label">緊急聯絡人姓名</span>
+            <input type="text" name="contact_name_edit" ng-model="contact_name_edit" placeholder="聯絡人姓名" required>
+          </label>
+          <label class="item item-input">
+            <i class="icon ion-iphone margin-right-10 text-align-center"></i>
+            <span class="input-label">緊急聯絡人電話</span>
+            <input type="text" name="contact_cel_edit" ng-model="contact_cel_edit" placeholder="聯絡人電話" required>
+          </label>
 
-
-
-
-                    <div class="alert" ng-show="register_form.account.$dirty && register_form.passwd.$dirty && register_form.name.$dirty && register_form.email.$dirty && register_form.location.$dirty">
-                        <div ng-show="register_form.$error.required">帳號、密碼、姓名及Email、地區欄位不可為空</div>
-                    </div>
-                    <div class="alert" ng-show="register_form.passwd.$dirty">
-                        <div ng-show="register_form.passwd.$error.minlength || register_form.passwd.$error.maxlength">密碼長度須介於8~20碼</div>
-                        <div ng-show="register_form.passwd.$error.pwsame">密碼不可與帳號相同</div>
-                    </div>
-                    <div class="alert" ng-show="register_form.passwd_check.$dirty">
-                        <div ng-show="register_form.passwd_check.$error.pwmatch">密碼與確認密碼不一致</div>
-                    </div>
-                    <div class="alert" ng-show="register_form.email.$dirty">
-                        <div ng-show="register_form.email.$error.email">Email格式錯誤</div>
-                    </div>
-                    <input id="submit_button" type="button" value="送出" class="button button-calm home_button margin-top-30 background-43A143" ng-click="updateData()">
-                </form>
-            </div>
+          <div class="alert" ng-show="edit_form.account_edit.$dirty && edit_form.passwd_edit.$dirty && edit_form.name.$dirty && edit_form.email.$dirty">
+            <div ng-show="edit_form.$error.required">帳號、密碼、姓名及Email、地區欄位不可為空</div>
+          </div>
+          <div class="alert" ng-show="edit_form.passwd_edit.$dirty">
+            <div ng-show="edit_form.passwd_edit.$error.minlength || edit_form.passwd_edit.$error.maxlength">密碼長度須介於8~20碼</div>
+            <div ng-show="edit_form.passwd_edit.$error.pwsame">密碼不可與帳號相同</div>
+          </div>
+          <div class="alert" ng-show="edit_form.passwd__edit_check.$dirty">
+            <div ng-show="edit_form.passwd__edit_check.$error.pwmatch">密碼與確認密碼不一致</div>
+          </div>
+          <div class="alert" ng-show="edit_form.email.$dirty">
+            <div ng-show="edit_form.email_edit.$error.email">Email格式錯誤</div>
+          </div>
+          <input id="edi_submit_button" type="button" value="送出" class="button button-calm home_button margin-top-30 background-43A143" ng-click="updateData()">
         </div>
-    </ion-content>
-</ion-view>
+      </form>
+    </div>
+  </ion-content>
+</ion-modal-view>

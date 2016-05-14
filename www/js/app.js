@@ -22,36 +22,36 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'ngCordova', 'starter.
       StatusBar.styleDefault();
     }
 
-      /*
-      Ionic.io();
-      var push = new Ionic.Push({
-      	"onNotification": function(notification){
-      		alert('Received Notification!');
-      	},
-      	"pluginConfig": {
-      		"android": {
-      			"iconColor": "#0000FF"
-      		}
-      	}
-      });
+    /*
+    Ionic.io();
+    var push = new Ionic.Push({
+    	"onNotification": function(notification){
+    		alert('Received Notification!');
+    	},
+    	"pluginConfig": {
+    		"android": {
+    			"iconColor": "#0000FF"
+    		}
+    	}
+    });
 
-      var user = Ionic.User.current();
+    var user = Ionic.User.current();
 
-      if(!user.id) {
-      	user.id = Ionic.User.anonymousId();
-      }
+    if(!user.id) {
+    	user.id = Ionic.User.anonymousId();
+    }
 
-      user.set('name','dapi');
-      user.set('bio','this is my lt bio');
-      user.save();
-      user.isDirty();
+    user.set('name','dapi');
+    user.set('bio','this is my lt bio');
+    user.save();
+    user.isDirty();
 
-      var callback = function() {
-      	push.addTokenToUser(user);
-      	user.save();
-      };
+    var callback = function() {
+    	push.addTokenToUser(user);
+    	user.save();
+    };
 
-      push.register(callback);*/
+    push.register(callback);*/
 
     var push = new Ionic.Push({
       "debug": true
@@ -61,6 +61,58 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'ngCordova', 'starter.
       console.log("Device token:", token.token);
     });
   });
+
+  /*window.onNotification = function(e) {
+
+    switch (e.event) {
+      case 'registered':
+        if (e.regid.length > 0) {
+
+          var device_token = e.regid;
+          RequestsService.register(device_token).then(function(response) {
+            alert('registered!');
+          });
+        }
+        break;
+
+      case 'message':
+        alert('msg received: ' + e.message);
+        /*
+        {
+          "message": "Hello this is a push notification",
+          "payload": {
+            "message": "Hello this is a push notification",
+            "sound": "notification",
+            "title": "New Message",
+            "from": "813xxxxxxx",
+            "collapse_key": "do_not_collapse",
+            "foreground": true,
+            "event": "message"
+          }
+        }
+        */
+        /*break;
+
+      case 'error':
+        alert('error occured');
+        break;
+
+    }
+  };
+  window.errorHandler = function(error) {
+    alert('an error occured');
+  };
+  pushNotification = window.plugins.pushNotification;
+  pushNotification.register(
+    onNotification,
+    errorHandler, {
+      'badge': 'true',
+      'sound': 'true',
+      'alert': 'true',
+      'ecb': 'onNotification',
+      'senderID': 'help-2aa04',
+    }
+  );*/
 })
 
 .constant('API', {

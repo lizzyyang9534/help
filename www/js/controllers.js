@@ -58,6 +58,12 @@ angular.module('starter.controllers', [])
     $scope.modal2 = modal;
   });
 
+  $ionicModal.fromTemplateUrl('templates/editmember.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal5 = modal;
+  });
+
   $ionicModal.fromTemplateUrl('templates/incident.html', {
     scope: $scope
   }).then(function(modal) {
@@ -77,6 +83,9 @@ angular.module('starter.controllers', [])
   $scope.closeForget = function() {
     $scope.modal2.hide();
   };
+  $scope.closeEditMember = function() {
+    $scope.modal5.hide();
+  };
   $scope.closeIncident = function() {
     $scope.modal3.hide();
   };
@@ -89,6 +98,9 @@ angular.module('starter.controllers', [])
   };
   $scope.forgetPassword = function() {
     $scope.modal2.show();
+  };
+  $scope.editMember = function() {
+    $scope.modal5.show();
   };
   $scope.incident = function() {
     var incident_data = $localstorage.getObject('incident_data');
@@ -196,12 +208,6 @@ angular.module('starter.controllers', [])
     }
     // Simulate a login delay. Remove this and replace with your login
     // code if using a login system
-
-
-  $scope.editMember = function() {
-    $state.go("app.editmember");
-  }
-
 
   $scope.home = function() {
     $ionicHistory.nextViewOptions({
@@ -396,45 +402,48 @@ angular.module('starter.controllers', [])
   ionicMaterialInk.displayEffect();
 })
 
-.controller('MemberCtrl', function($scope, $http, $ionicLoading, $state, $localstorage, $ionicPopup, ionicMaterialInk, $ionicHistory) {
-  var user_view = $localstorage.getObject('user_data');
-  $scope.account = user_view.account;
-  $scope.passwd = user_view.password;
-  $scope.name = user_view.name;
-  $scope.cel = user_view.cellphone;
-  $scope.email = user_view.email;
-  $scope.contact_name = user_view.contact_name,
-    $scope.contact_cel = user_view.contact_cel
+.controller('MemberCtrl', function($scope, $http, $ionicLoading, $state, $timeout, $localstorage, $ionicPopup, ionicMaterialInk, $ionicHistory) {
+  var user_data = $localstorage.getObject('user_data');
+  $scope.initialize = function() {
+    var user_data = $localstorage.getObject('user_data');
+    $scope.account = user_data.account;
+    $scope.password = user_data.password;
+    $scope.name = user_data.name;
+    $scope.cellphone = user_data.cellphone;
+    $scope.email = user_data.email;
+    $scope.contact_name = user_data.contact_name;
+    $scope.contact_cel = user_data.contact_cel;
+
+    $scope.account_edit = user_data.account;
+    $scope.passwd_edit = user_data.password;
+    $scope.name_edit = user_data.name;
+    $scope.cel_edit = user_data.cellphone;
+    $scope.email_edit = user_data.email;
+    $scope.contact_name_edit = user_data.contact_name;
+    $scope.contact_cel_edit = user_data.contact_cel;
+  }
+  $scope.initialize();
 
   $scope.updateData = function() {
     if ($scope.edit_form.$valid) {
+      //console.log($scope.contact_name_edit + "," + $scope.contact_cel_edit);
       // 通過驗證
       $http.post(serverIP + "/api/editMember.php", {
-          'account': $scope.account,
-          'passwd': $scope.passwd,
-          'name': $scope.name,
-          'cel': $scope.cel,
-          'email': $scope.email,
-          'contact_name': $scope.contact_name,
-          'contact_cel': $scope.contact_cel
+          'account': $scope.account_edit,
+          'passwd': $scope.passwd_edit,
+          'name': $scope.name_edit,
+          'cel': $scope.cel_edit,
+          'email': $scope.email_edit,
+          'contact_name': $scope.contact_name_edit,
+          'contact_cel': $scope.contact_cel_edit
         })
         .success(function(data, status, headers, config) {
-          console.log(data);
-          $localstorage.setObject('user_data', {
-            account: $scope.account,
-            password: $scope.passwd,
-            name: $scope.name,
-            cellphone: $scope.cel,
-            email: $scope.email,
-            contact_name: $scope.contact_name,
-            contact_cel: $scope.contact_cel
-          });
-          $ionicHistory.nextViewOptions({
-            disableBack: true
-          });
-          $state.go("app.member", {}, {
-            reload: true
-          });
+          var new_user_data = data;
+          console.log(new_user_data);
+
+          $localstorage.setObject('user_data', new_user_data);
+          $scope.closeEditMember();
+          $scope.doRefresh();
         });
     } else {
       // 未通過驗證
@@ -442,6 +451,21 @@ angular.module('starter.controllers', [])
         title: "請完整輸入資料！"
       });
     }
+  }
+
+  $scope.doRefresh = function() {
+    console.log('Refreshing!');
+    $timeout(function() {
+      $http.post(serverIP + "/api/getMemberData.php", {
+          'account': user_data.account
+        })
+        .success(function(data, status, headers, config) {
+          var new_user_data = data;
+          $localstorage.setObject('user_data', new_user_data);
+        })
+      $scope.initialize();
+      $scope.$broadcast('scroll.refreshComplete');
+    }, 1000);
   }
 
   ionicMaterialInk.displayEffect();
@@ -813,174 +837,260 @@ angular.module('starter.controllers', [])
 })
 
 .controller('ShopCtrl', function($scope, $http, $ionicLoading, $compile, $state, $timeout, $ionicPopup, $localstorage, ionicMaterialInk) {
+  var user_data = $localstorage.getObject('user_data');
+  var coupons = [];
+  var coupons_category1 = [];
+  var coupons_category2 = [];
+  var coupons_category3 = [];
+  var coupons_category4 = [];
+  var coupons_category5 = [];
+
+  $http.post(serverIP + "/api/getMemberData.php", {
+      'account': user_data.account
+    })
+    .success(function(data, status, headers, config) {
+      var new_user_data = data;
+      //console.log(new_user_data);
+      $localstorage.setObject('user_data', new_user_data);
+      $scope.points = new_user_data.points;
+    })
+
+  $scope.initialize = function() {
+    $scope.points = user_data.points;
+    $scope.current_category = 1;
+    coupons_category1 = [];
+    coupons_category2 = [];
+    coupons_category3 = [];
+    coupons_category4 = [];
+    coupons_category5 = [];
+
+    $http.post(serverIP + "/api/shop.php", {
+        'account': user_data.account
+      })
+      .success(function(data, status, headers, config) {
+        var allCoupon = data;
+
+        for (i = 0; i < allCoupon.length; i++) {
+          var coupon = {};
+          coupon.id = allCoupon[i].coupon_id;
+          coupon.name = allCoupon[i].coupon_name;
+          coupon.category = allCoupon[i].coupon_category;
+          coupon.description = allCoupon[i].coupon_description;
+          coupon.price = allCoupon[i].coupon_price;
+          if (coupon.category == 1)
+            coupons_category1.push(coupon);
+          else if (coupon.category == 2)
+            coupons_category2.push(coupon);
+          else if (coupon.category == 3)
+            coupons_category3.push(coupon);
+          else if (coupon.category == 4)
+            coupons_category4.push(coupon);
+          else if (coupon.category == 5)
+            coupons_category5.push(coupon);
+        }
+
+        $scope.coupons = coupons_category1;
+        $scope.data = {
+          choice: ''
+        };
+      })
+  }
+  $scope.initialize();
+  $scope.couponCategory = function(category) {
+    var catagory_choice = category;
+    $scope.current_category = catagory_choice;
+
+    if (catagory_choice == 1)
+      $scope.coupons = coupons_category1;
+    else if (catagory_choice == 2)
+      $scope.coupons = coupons_category2;
+    else if (catagory_choice == 3)
+      $scope.coupons = coupons_category3;
+    else if (catagory_choice == 4)
+      $scope.coupons = coupons_category4;
+    else if (catagory_choice == 5)
+      $scope.coupons = coupons_category5;
+
+    $("div.tabs a").removeClass("active");
+    $("#" + event.currentTarget.id).addClass("active");
+  }
+
+
+  $scope.buyCoupon = function() {
     var user_data = $localstorage.getObject('user_data');
-    var coupons = [];
-    var coupons_category1 = [];
-    var coupons_category2 = [];
-    var coupons_category3 = [];
-    var coupons_category4 = [];
-    var coupons_category5 = [];
+    var coupon_id = $("#" + event.currentTarget.id + " div.couponId").text();
+    var coupon_price = parseInt($("#" + event.currentTarget.id + " span.couponPrice").text());
+    //console.log(coupon_id + "," + coupon_price + "/I have:" + user_data.points);
 
+    if (user_data.points >= coupon_price) {
+      var confirmPopup = $ionicPopup.confirm({
+        title: '兌換折價券',
+        template: "確定要兌換此折價券?",
+        cancelText: '取消',
+        okText: '確認'
+      });
 
-    $scope.initialize = function() {
-        $scope.points = user_data.points;
-        $scope.current_category = 1;
-        coupons_category1 = [];
-        coupons_category2 = [];
-        coupons_category3 = [];
-        coupons_category4 = [];
-        coupons_category5 = [];
-
-        $http.post(serverIP + "/api/shop.php", {
-                'account': user_data.account
+      confirmPopup.then(function(res) {
+        if (res) {
+          var new_points = user_data.points - coupon_price;
+          //console.log(new_points);
+          $http.post(serverIP + "/api/buyCoupon.php", {
+              'account': user_data.account,
+              'coupon_id': coupon_id,
+              'points': new_points
             })
             .success(function(data, status, headers, config) {
-                var allCoupon = data;
-
-                for (i = 0; i < allCoupon.length; i++) {
-                    var coupon = {};
-                    coupon.id = allCoupon[i].coupon_id;
-                    coupon.name = allCoupon[i].coupon_name;
-                    coupon.category = allCoupon[i].coupon_category;
-                    coupon.description = allCoupon[i].coupon_description;
-                    coupon.price = allCoupon[i].coupon_price;
-                    if (coupon.category == 1)
-                        coupons_category1.push(coupon);
-                    else if (coupon.category == 2)
-                        coupons_category2.push(coupon);
-                    else if (coupon.category == 3)
-                        coupons_category3.push(coupon);
-                    else if (coupon.category == 4)
-                        coupons_category4.push(coupon);
-                    else if (coupon.category == 5)
-                        coupons_category5.push(coupon);
-                }
-
-                $scope.coupons = coupons_category1;
-                $scope.data = {
-                    choice: ''
-                };
+              //console.log(data);
+              var deducted_points = data;
+              var new_user_data = user_data;
+              new_user_data.points = deducted_points;
+              //console.log(new_user_data);
+              $localstorage.setObject('user_data', new_user_data);
+              $scope.doRefresh();
             })
+          $ionicPopup.alert({
+            title: "成功兌換折價券！<br/>請至 我的折價券 頁面查看",
+          });
+        } else
+          console.log('You are not sure');
+      });
+    } else {
+      $ionicPopup.alert({
+        title: "您的積分不足！快去幫助別人吧！",
+      });
     }
-    $scope.initialize();
-    $scope.couponCategory = function(category) {
-        var catagory_choice = category;
-        $scope.current_category = catagory_choice;
+  }
 
-        if (catagory_choice == 1)
-            $scope.coupons = coupons_category1;
-        else if (catagory_choice == 2)
-            $scope.coupons = coupons_category2;
-        else if (catagory_choice == 3)
-            $scope.coupons = coupons_category3;
-        else if (catagory_choice == 4)
-            $scope.coupons = coupons_category4;
-        else if (catagory_choice == 5)
-            $scope.coupons = coupons_category5;
-
-        $("div.tabs a").removeClass("active");
-        $("#" + event.currentTarget.id).addClass("active");
-    }
-
-    $scope.doRefresh = function() {
-      $timeout(function() {
-        $http.post(serverIP + "/api/getMemberData.php", {
-            'account': user_data.account
-          })
-          .success(function(data, status, headers, config) {
-            var new_user_data = data;
-            //console.log(new_user_data);
-            $localstorage.setObject('user_data', new_user_data);
-            $scope.points = new_user_data.points;
-          })
-        $scope.initialize();
-        $("div.tabs a").removeClass("active");
-        $("#couponCategory1").addClass("active");
-        $scope.$broadcast('scroll.refreshComplete');
-      }, 1000);
-    }
-    ionicMaterialInk.displayEffect();
+  $scope.doRefresh = function() {
+    $timeout(function() {
+      $http.post(serverIP + "/api/getMemberData.php", {
+          'account': user_data.account
+        })
+        .success(function(data, status, headers, config) {
+          var new_user_data = data;
+          console.log(new_user_data);
+          $localstorage.setObject('user_data', new_user_data);
+          $scope.points = new_user_data.points;
+        })
+      $scope.initialize();
+      $("div.tabs a").removeClass("active");
+      $("#couponCategory1").addClass("active");
+      $scope.$broadcast('scroll.refreshComplete');
+    }, 1000);
+  }
+  ionicMaterialInk.displayEffect();
 })
 
 .controller('MyCouponCtrl', function($scope, $http, $ionicLoading, $compile, $state, $timeout, $ionicPopup, $localstorage, ionicMaterialInk) {
-    var user_data = $localstorage.getObject('user_data');
-    var coupons = [];
-    var coupons_category1 = [];
-    var coupons_category2 = [];
-    var coupons_category3 = [];
-    var coupons_category4 = [];
-    var coupons_category5 = [];
+  var user_data = $localstorage.getObject('user_data');
+  var coupons = [];
+  var coupons_category1 = [];
+  var coupons_category2 = [];
+  var coupons_category3 = [];
+  var coupons_category4 = [];
+  var coupons_category5 = [];
 
 
-    $scope.initialize = function() {
-        $scope.current_category = 1;
-        coupons_category1 = [];
-        coupons_category2 = [];
-        coupons_category3 = [];
-        coupons_category4 = [];
-        coupons_category5 = [];
+  $scope.initialize = function() {
+    $scope.current_category = 1;
+    coupons_category1 = [];
+    coupons_category2 = [];
+    coupons_category3 = [];
+    coupons_category4 = [];
+    coupons_category5 = [];
 
-        $http.post(serverIP + "/api/getMemberCoupons.php", {
-                'account': user_data.account
-            })
-            .success(function(data, status, headers, config) {
-                var allCoupon = data;
-                console.log(allCoupon);
+    $http.post(serverIP + "/api/getMemberCoupons.php", {
+        'account': user_data.account
+      })
+      .success(function(data, status, headers, config) {
+        var allCoupon = data;
+        console.log(allCoupon);
 
-                for (i = 0; i < allCoupon.length; i++) {
-                    var coupon = {};
-                    coupon.id = allCoupon[i].coupon_id;
-                    coupon.name = allCoupon[i].coupon_name;
-                    coupon.category = allCoupon[i].coupon_category;
-                    coupon.description = allCoupon[i].coupon_description;
-                    coupon.price = allCoupon[i].coupon_price;
-                    if (coupon.category == 1)
-                        coupons_category1.push(coupon);
-                    else if (coupon.category == 2)
-                        coupons_category2.push(coupon);
-                    else if (coupon.category == 3)
-                        coupons_category3.push(coupon);
-                    else if (coupon.category == 4)
-                        coupons_category4.push(coupon);
-                    else if (coupon.category == 5)
-                        coupons_category5.push(coupon);
-                }
+        for (i = 0; i < allCoupon.length; i++) {
+          var coupon = {};
+          coupon.member_coupon_id = allCoupon[i].member_coupon_id;
+          coupon.id = allCoupon[i].coupon_id;
+          coupon.name = allCoupon[i].coupon_name;
+          coupon.category = allCoupon[i].coupon_category;
+          coupon.description = allCoupon[i].coupon_description;
+          coupon.price = allCoupon[i].coupon_price;
+          if (coupon.category == 1)
+            coupons_category1.push(coupon);
+          else if (coupon.category == 2)
+            coupons_category2.push(coupon);
+          else if (coupon.category == 3)
+            coupons_category3.push(coupon);
+          else if (coupon.category == 4)
+            coupons_category4.push(coupon);
+          else if (coupon.category == 5)
+            coupons_category5.push(coupon);
+        }
 
-                $scope.mycoupons = coupons_category1;
-                $scope.data = {
-                    choice: ''
-                };
-            })
-    }
-    $scope.initialize();
-    $scope.couponCategory = function(category) {
-        var catagory_choice = category;
-        $scope.current_category = catagory_choice;
+        $scope.mycoupons = coupons_category1;
+        $scope.data = {
+          choice: ''
+        };
+      })
+  }
+  $scope.initialize();
+  $scope.couponCategory = function(category) {
+    var catagory_choice = category;
+    $scope.current_category = catagory_choice;
 
-        if (catagory_choice == 1)
-            $scope.mycoupons = coupons_category1;
-        else if (catagory_choice == 2)
-            $scope.mycoupons = coupons_category2;
-        else if (catagory_choice == 3)
-            $scope.mycoupons = coupons_category3;
-        else if (catagory_choice == 4)
-            $scope.mycoupons = coupons_category4;
-        else if (catagory_choice == 5)
-            $scope.mycoupons = coupons_category5;
+    if (catagory_choice == 1)
+      $scope.mycoupons = coupons_category1;
+    else if (catagory_choice == 2)
+      $scope.mycoupons = coupons_category2;
+    else if (catagory_choice == 3)
+      $scope.mycoupons = coupons_category3;
+    else if (catagory_choice == 4)
+      $scope.mycoupons = coupons_category4;
+    else if (catagory_choice == 5)
+      $scope.mycoupons = coupons_category5;
 
-        $("div.tabs a").removeClass("active");
-        $("#" + event.currentTarget.id).addClass("active");
-    }
+    $("div.tabs a").removeClass("active");
+    $("#" + event.currentTarget.id).addClass("active");
+  }
 
-    $scope.doRefresh = function() {
-      $timeout(function() {
-        $scope.initialize();
-        $("div.tabs a").removeClass("active");
-        $("#myCouponCategory1").addClass("active");
-        $scope.$broadcast('scroll.refreshComplete');
-      }, 1000);
-    }
-    ionicMaterialInk.displayEffect();
+  $scope.useCoupon = function() {
+    var my_coupon_id = $("#" + event.currentTarget.id + " div.myCouponId").text();
+    //console.log(event.currentTarget.id + "," + my_coupon_id);
+
+    var confirmPopup = $ionicPopup.confirm({
+      title: '使用折價券',
+      template: "確定要兌換此折價券?<br/>●請向店員出示此畫面●<br/>●並由店員按下確認鍵●",
+      cancelText: '取消',
+      okText: '確認'
+    });
+
+    confirmPopup.then(function(res) {
+      if (res) {
+        $http.post(serverIP + "/api/useCoupon.php", {
+            'account': user_data.account,
+            'coupon_id': my_coupon_id
+          })
+          .success(function(data, status, headers, config) {
+            //console.log(data);
+
+            $scope.doRefresh();
+          })
+        $ionicPopup.alert({
+          title: "已使用折價券！<br/>幫助更多人可以獲得更多折價券！",
+        });
+      } else
+        console.log('You are not sure');
+    })
+  }
+
+  $scope.doRefresh = function() {
+    $timeout(function() {
+      $scope.initialize();
+      $("div.tabs a").removeClass("active");
+      $("#myCouponCategory1").addClass("active");
+      $scope.$broadcast('scroll.refreshComplete');
+    }, 1000);
+  }
+  ionicMaterialInk.displayEffect();
 })
 
 .controller('MapCtrl', function($scope, $http, $ionicLoading, $compile, $state, $window, $ionicPopup, $ionicHistory, $ionicModal, $localstorage, ionicMaterialInk) {
@@ -1029,14 +1139,14 @@ angular.module('starter.controllers', [])
     var marker = new google.maps.Marker({
       position: initialLocation,
       map: map
-      //icon: cicon,
+        //icon: cicon,
     });
 
     var infowindow = new google.maps.InfoWindow({
       content: ''
     });
 
-	//alert(calcDistance(p1, p2)); ccccccccccccccccccccccccccccccccccccc
+    //alert(calcDistance(p1, p2)); ccccccccccccccccccccccccccccccccccccc
 
     $http.post(serverIP + "/api/incidentLocation.php", {
         'test': "test"
@@ -1075,14 +1185,16 @@ angular.module('starter.controllers', [])
           /*var status = "<a ng-show = \"show\" >" + allLocation[i].status+ "</a>"
                         "<a ng-show = \"show=true\" > unsolved </a>";*/
 
-          var dt = '<br><i class="icon ion-calendar margin-right-10"> 截止時間:</i><br>'+ allLocation[i].date ;
+          var dt = '<br><i class="icon ion-calendar margin-right-10"> 截止時間:</i><br>' + allLocation[i].date;
           var help_button = "<button class=\"help_button\" ng-click=\"helpcheck(" + num + ")\">HELP</button>";
 
           var status = '';
           if (allLocation[i].status == 'no helper') {
             status = '<br><i class="icon ion-close-circled margin-right-10 color-E14F2B"> 目前無人協助</i>';
-          } else {
+          } else if (allLocation[i].status == 'matching') {
             status = '<br><i class="icon ion-android-contacts margin-right-10 color-11c1f3"> 配對中</i>';
+          } else if (allLocation[i].status == 'unsolved') {
+            status = '<br><i class="icon ion-android-contacts margin-right-10 color-11c1f3"> 解決中</i>';
           }
 
           var infoContent = "<div>" + '<h5>' + title + '</h5>' + '<i class="icon ion-chatbubble-working color-A8A8A8"> ' + illust + '</i>' + dt + status + help_button + "</div>";
@@ -1097,8 +1209,8 @@ angular.module('starter.controllers', [])
 
 
     function calcDistance(p1, p2) {
-	return (google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000).toFixed(2);
-	}
+      return (google.maps.geometry.spherical.computeDistanceBetween(p1, p2) / 1000).toFixed(2);
+    }
 
 
     function handleNoGeolocation(errorFlag) {
@@ -1184,7 +1296,7 @@ angular.module('starter.controllers', [])
         console.log(data);
         var missionLocation = [];
         missionLocation = data;
-        console.log("setceter success");
+        ///console.log("setceter success");
         var loc = missionLocation.location;
         //console.log(loc);
         var coordinate = loc.split(",", 2);
@@ -1239,19 +1351,19 @@ angular.module('starter.controllers', [])
   };
 })
 
-.directive('formattedTime', function ($filter) {
+.directive('formattedTime', function($filter) {
 
   return {
     require: '?ngModel',
     link: function(scope, elem, attr, ngModel) {
-        if( !ngModel )
-            return;
-        if( attr.type !== 'datetime-local' )
-            return;
+      if (!ngModel)
+        return;
+      if (attr.type !== 'datetime-local')
+        return;
 
-        ngModel.$formatters.unshift(function(value) {
-            return value.replace(/:[0-9]+.[0-9]+$/, '');
-        });
+      ngModel.$formatters.unshift(function(value) {
+        return value.replace(/:[0-9]+.[0-9]+$/, '');
+      });
     }
   };
 

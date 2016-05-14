@@ -1,4 +1,4 @@
-<ion-modal-view>
+<ion-modal-view ng-controller="NotificateCtrl">
   <ion-header-bar class="bar-calm background-B4E065">
     <h1 class="title">協助通知</h1>
     <div class="buttons">
@@ -7,26 +7,19 @@
 	  </button>
     </div>
   </ion-header-bar>
-  <ion-content>
+  <ion-content scroll=true>
     <ion-list>
-	  <ion-item ng-controller="MapCtrl" ng-click="centerOnIncident()">
-  	  	<span>
+	  <ion-item ng-click="centerOnIncident()">
+  	  	<!---<span>
           <img src="http://upload.gezila.com/data/20150403/34691428024782.gif" width="50" height="50" align="top">
         </span>
   	  	<div>
           <span>你有一個新任務!</span>
           <span>主題:<a>oh my god</a></span>
-        </div>
-  	  </ion-item>
-	  <ion-item ng-controller="MapCtrl" ng-click="centerOnIncident()">
-  	  	<span>
-          <img src="http://upload.gezila.com/data/20150403/34691428024782.gif" width="50" height="50" align="top">
-        </span>
-  	  	<div>
-          <span>你有一個新任務!</span>
-          <span>主題:<a>oh my god</a></span>
-        </div>
-  	  </ion-item>
+        </div>-->
+	  </ion-item>
+    
 	</ion-list>
+
   </ion-content>
 </ion-modal-view>

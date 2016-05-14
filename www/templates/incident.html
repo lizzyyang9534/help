@@ -42,13 +42,13 @@
         <span ng-hide="incident.status == 'ask rating'">{{ incident.rating }}</span>
       </label>
       <div id="rating_option" class="button-bar bar-calm background-A8BF7C width-90per margin-auto" ng-show="incident.status == 'ask rating'">
-        <div class="button button-raised background-A8BF7C ink-dark" ng-click="rating(1)">尚可</div>
-        <div class="button button-raised background-A8BF7C ink-dark" ng-click="rating(2)">棒</div>
-        <div class="button button-raised background-A8BF7C ink-dark" ng-click="rating(3)">很棒</div>
+        <div class="button button-raised background-43A143 ink-dark" ng-click="rating(1)">尚可</div>
+        <div class="button button-raised background-43A143 ink-dark" ng-click="rating(2)">棒</div>
+        <div class="button button-raised background-43A143 ink-dark" ng-click="rating(3)">很棒</div>
       </div>
       <label class="item item-input" ng-show="incident.status == 'matching'">
         <i class="icon ion-ios-people margin-right-10 text-align-center font-size-22"></i>
-        <span class="input-label">Helpers</span>
+        <span class="input-label">幫助者</span>
       </label>
       <ion-list ng-show="incident.status == 'matching'">
         <ion-radio name="helper_choice" ng-model="data.choice" ng-value="helper.value" ng-repeat="helper in helpers_list">{{ helper.text }}</ion-radio>

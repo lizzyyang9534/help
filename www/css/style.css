@@ -80,9 +80,10 @@ input.ng-dirty.ng-invalid {
 }
 .home_button {
   display: block;
-  margin-left: 20% !important;
+  margin-left: 18% !important;
   margin-bottom: 10px !important;
-  width: 60%;
+  width: 64%;
+  border-radius: 25px !important;
 }
 .register_button {
   display: block;
@@ -284,6 +285,9 @@ input.ng-dirty.ng-invalid {
 .border-top-0{
   border-top: 0 !important;
 }
+.border-top-10{
+  border-top: 10 !important;
+}
 .border-bottom-11c1f3 {
   border-bottom: 3px solid #11c1f3 !important;
 }
@@ -442,6 +446,9 @@ input.ng-dirty.ng-invalid {
 }
 .background-43A143{
   background: #43A143 !important;
+}
+.background-FF57DE{
+  background: #FF57DE !important;
 }
 .background-color-transparent{
 	background-color: transparent !important;

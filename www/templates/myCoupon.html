@@ -22,8 +22,9 @@
       娛樂
     </div>
     <div class="list margin-bottom-50">
-      <a class="item item-thumbnail-left coupon" name="mycoupon" ng-repeat="mycoupon in mycoupons">
+      <a id="myCouponID{{mycoupon.member_coupon_id}}" class="item item-thumbnail-left coupon" name="mycoupon" ng-repeat="mycoupon in mycoupons" ng-click="useCoupon()">
         <img src="img/material2.jpg">
+        <div class="myCouponId" style="display:none">{{ mycoupon.member_coupon_id }}</div>
         <div class="font-size-18 margin-bottom-10">{{ mycoupon.name }}</div>
         <div class="margin-bottom-5">{{ mycoupon.description }}</div>
         <div class="text-align-right font-size-22">
