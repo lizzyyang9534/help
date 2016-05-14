@@ -22,44 +22,51 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'ngCordova', 'starter.
       StatusBar.styleDefault();
     }
 
-    /*
+
     Ionic.io();
     var push = new Ionic.Push({
-    	"onNotification": function(notification){
-    		alert('Received Notification!');
-    	},
-    	"pluginConfig": {
-    		"android": {
-    			"iconColor": "#0000FF"
-    		}
-    	}
+      "debug": true,
+      "onNotification": function(notification) {
+        var payload = notification.payload;
+        console.log(notification, payload);
+        //alert('Received Notification!');
+      },
+      "onRegister": function(data) {
+        console.log(data.token);
+      },
+      "pluginConfig": {
+        "android": {
+          "iconColor": "#0000FF"
+        }
+      }
     });
 
     var user = Ionic.User.current();
-
-    if(!user.id) {
-    	user.id = Ionic.User.anonymousId();
+    console.log(user);
+    if (!user.id) {
+      user.id = Ionic.User.anonymousId();
     }
 
-    user.set('name','dapi');
-    user.set('bio','this is my lt bio');
+    user.set('name', 'dapi');
+    user.set('bio', 'this is my lt bio');
     user.save();
     user.isDirty();
 
-    var callback = function() {
-    	push.addTokenToUser(user);
-    	user.save();
+    var callback = function(pushToken) {
+      console.log(pushToken.token);
+      push.addTokenToUser(user);
+      user.save();
     };
 
-    push.register(callback);*/
+    push.register(callback);
 
-    var push = new Ionic.Push({
+    /*var push = new Ionic.Push({
       "debug": true
     });
 
     push.register(function(token) {
       console.log("Device token:", token.token);
-    });
+    });*/
   });
 
   /*window.onNotification = function(e) {
@@ -91,7 +98,7 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'ngCordova', 'starter.
           }
         }
         */
-        /*break;
+  /*break;
 
       case 'error':
         alert('error occured');

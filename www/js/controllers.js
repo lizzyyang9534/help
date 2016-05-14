@@ -75,6 +75,12 @@ angular.module('starter.controllers', [])
   }).then(function(modal) {
     $scope.modal4 = modal;
   });
+  $ionicModal.fromTemplateUrl('templates/notificate.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal6 = modal;
+  });
 
   // Triggered in the modal to close it
   $scope.closeRegister = function() {
@@ -92,6 +98,10 @@ angular.module('starter.controllers', [])
   $scope.closeHelp = function() {
     $scope.modal4.hide();
   };
+  $scope.closeNotificate = function() {
+    $scope.modal6.hide();
+  };
+
   // Open the modal
   $scope.register = function() {
     $scope.modal1.show();
@@ -101,6 +111,9 @@ angular.module('starter.controllers', [])
   };
   $scope.editMember = function() {
     $scope.modal5.show();
+  };
+  $scope.notificate = function() {
+    $scope.modal6.show();
   };
   $scope.incident = function() {
     var incident_data = $localstorage.getObject('incident_data');
@@ -1186,7 +1199,12 @@ angular.module('starter.controllers', [])
                         "<a ng-show = \"show=true\" > unsolved </a>";*/
 
           var dt = '<br><i class="icon ion-calendar margin-right-10"> 截止時間:</i><br>' + allLocation[i].date;
-          var help_button = "<button class=\"help_button\" ng-click=\"helpcheck(" + num + ")\">HELP</button>";
+
+          var hd = false;
+          if (allLocation[i].status == 'unsolved') {
+            hd = true;
+          }
+          var help_button = "<button ng-hide=\"" + hd + "\" class=\"help_button\" ng-click=\"helpcheck(" + num + ")\">HELP</button>";
 
           var status = '';
           if (allLocation[i].status == 'no helper') {
@@ -1194,7 +1212,7 @@ angular.module('starter.controllers', [])
           } else if (allLocation[i].status == 'matching') {
             status = '<br><i class="icon ion-android-contacts margin-right-10 color-11c1f3"> 配對中</i>';
           } else if (allLocation[i].status == 'unsolved') {
-            status = '<br><i class="icon ion-android-contacts margin-right-10 color-11c1f3"> 解決中</i>';
+            status = '<br><i class="icon ion-android-contacts margin-right-10 color-FFDC00"> 解決中</i>';
           }
 
           var infoContent = "<div>" + '<h5>' + title + '</h5>' + '<i class="icon ion-chatbubble-working color-A8A8A8"> ' + illust + '</i>' + dt + status + help_button + "</div>";
@@ -1369,19 +1387,57 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('NotificateCtrl', function($scope, $ionicModal, $http, $state, $ionicHistory, $localstorage, ionicMaterialInk) {
-  $ionicModal.fromTemplateUrl('templates/notificate.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
+.controller('NotificateCtrl', function($scope, $ionicModal, $http, $state, $interval, $ionicHistory, $localstorage, ionicMaterialInk) {
+  var user_data = $localstorage.getObject('user_data');
+  var notifications = [];
+  var notification_list = [];
 
-  $scope.closeNotificate = function() {
-    $scope.modal.hide();
-  };
+  function initialize() {
+    notifications = [];
+    notification_list = [];
+    $http.post(serverIP + "/api/getNotification.php", {
+        'account': user_data.account
+      })
+      .success(function(data, status, headers, config) {
+        var allNotification = data;
+        //console.log(allNotification);
 
-  $scope.notificate = function() {
-    $scope.modal.show();
-  };
+        for (i = 0; i < allNotification.length; i++) {
+          var notification = {};
+          notification.id = allNotification[i].id;
+          notification.category = allNotification[i].category;
+          notification.content = allNotification[i].content;
+          notification.incident_number = allNotification[i].incident_number;
+          notification.sender_account = allNotification[i].sender_account;
+
+          notifications.push(notification);
+        }
+
+        $scope.notification_list = notifications;
+        $scope.data = {
+          choice: ''
+        };
+      })
+  }
+  initialize();
+  $interval(initialize, 5000);
+
+  $scope.seeNotification = function(){
+    var current_notification = $("#" + event.currentTarget.id + " h2.notificationCategory").text();
+    var pageToGo = "";
+
+    if(current_notification == "ask help")
+      pageToGo = "app.map"
+    else if(current_notification == "ask match" || current_notification == "solved")
+      pageToGo = "app.incidentHistory"
+    else if(current_notification == "matched" || current_notification == "rated")
+      pageToGo = "app.helpHistory"
+
+    $ionicHistory.nextViewOptions({
+      disableBack: true
+    });
+    $state.go(pageToGo);
+    $scope.closeNotificate();
+  }
+  ionicMaterialInk.displayEffect();
 })

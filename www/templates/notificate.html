@@ -1,25 +1,30 @@
-<ion-modal-view ng-controller="NotificateCtrl">
-  <ion-header-bar class="bar-calm background-B4E065">
-    <h1 class="title">協助通知</h1>
-    <div class="buttons">
-      <button class="button button-clear" ng-click="closeNotificate()">
-	  <i class="ion-close-round margin-right-10 text-align-center"></i>
-	  </button>
-    </div>
-  </ion-header-bar>
-  <ion-content scroll=true>
-    <ion-list>
-	  <ion-item ng-click="centerOnIncident()">
-  	  	<!---<span>
+<ion-modal-view>
+  <div ng-controller="NotificateCtrl">
+    <ion-header-bar class="bar-calm background-B4E065">
+      <h1 class="title">協助通知</h1>
+      <div class="buttons">
+        <button class="button button-clear" ng-click="closeNotificate()">
+          <i class="ion-close-round margin-right-10 text-align-center"></i>
+        </button>
+      </div>
+    </ion-header-bar>
+    <ion-content>
+      <ion-list>
+        <!---<ion-item ng-controller="MapCtrl" ng-click="centerOnIncident()">
+  	  	<span>
           <img src="http://upload.gezila.com/data/20150403/34691428024782.gif" width="50" height="50" align="top">
         </span>
   	  	<div>
           <span>你有一個新任務!</span>
           <span>主題:<a>oh my god</a></span>
-        </div>-->
-	  </ion-item>
-    
-	</ion-list>
-
-  </ion-content>
+        </div>
+  	  </ion-item>--->
+        <a id="notification{{ notification.id }}" class="item item-avatar" ng-repeat="notification in notification_list" ng-click="seeNotification()">
+          <img src="./img/material4.jpg">
+          <h2 class="notificationCategory">{{ notification.category }}</h2>
+          <p>{{ notification.content }}</p>
+        </a>
+      </ion-list>
+    </ion-content>
+  </div>
 </ion-modal-view>
