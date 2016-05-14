@@ -16,7 +16,8 @@
       </label>
       <label class="item item-input">
         <i class="icon ion-android-sad margin-right-10 text-align-center font-size-22"></i>
-        <span class="input-label">求助者</span> {{ help.ID }}
+        <span class="input-label">求助者</span>
+        <span id="current_incident_asker">{{ help.ID }}</span>
       </label>
       <label class="item item-input">
         <i class="icon ion-android-alert margin-right-10 text-align-center font-size-22"></i>
@@ -39,7 +40,7 @@
         <i class="icon ion-trophy margin-right-10 text-align-center font-size-22"></i>
         <span class="input-label">評分</span>{{ help.rating }}
       </label>
-      <input type="button" value="完成事件" class="button button-calm login_button background-43A143" ng-show="help.status == 'unsolved'" ng-click="solveIncident()">
+      <input type="button" value="完成事件" class="button button-calm login_button background-43A143 margin-bottom-10" ng-show="help.status == 'unsolved'" ng-click="solveIncident()">
     </div>
   </ion-content>
 </ion-modal-view>

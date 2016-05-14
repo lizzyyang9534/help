@@ -84,6 +84,7 @@ input.ng-dirty.ng-invalid {
   margin-bottom: 10px !important;
   width: 64%;
   border-radius: 25px !important;
+  font-size:50px;
 }
 .register_button {
   display: block;

@@ -517,6 +517,13 @@ angular.module('starter.controllers', [])
         'location': catchpos
       })
       .success(function(data, status, headers, config) {
+        $http.post(serverIP + "/api/addincidentNotification.php", {
+            'account': user_data.account,
+            
+          })
+          .success(function(data, status, headers, config) {
+
+          })
         console.log("data insert successfully " + catchpos);
         $scope.level = null;
         $scope.category = null;
@@ -557,6 +564,7 @@ angular.module('starter.controllers', [])
         var helper = $("#current_incident_helper").text();
         $http.post(serverIP + "/api/rating.php", {
             'number': num,
+            'account':user_data.account,
             'rating': rating_option,
             'helper': helper
           })
@@ -615,13 +623,14 @@ angular.module('starter.controllers', [])
         var num = $("#current_incident_number").text();
         $http.post(serverIP + "/api/matchHelper.php", {
             'number': num,
+            'account': user_data.account,
             'helper': choice
           })
           .success(function(data, status, headers, config) {
             console.log(data);
 
             $scope.closeIncident();
-            $window.location.reload(true);
+            //$window.location.reload(true);
           })
       } else
         console.log('You are not sure');
@@ -726,6 +735,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('HelpViewCtrl', function($scope, $http, $ionicPopup, $state, $localstorage, $window, ionicMaterialInk) {
+  var user_data = $localstorage.getObject('user_data');
   $scope.solveIncident = function() {
     var confirmPopup = $ionicPopup.confirm({
       title: '完成事件',
@@ -738,8 +748,11 @@ angular.module('starter.controllers', [])
       if (res) {
         console.log('You are sure');
         var num = $("#current_incident_number").text();
+        var asker = $("#current_incident_asker").text();
         $http.post(serverIP + "/api/solveIncident.php", {
-            'number': num
+            'number': num,
+            'account': user_data.account,
+            'asker': asker
           })
           .success(function(data, status, headers, config) {
             console.log(data);
@@ -1267,7 +1280,7 @@ angular.module('starter.controllers', [])
 
         $http.post(serverIP + "/api/helpOthers.php", {
             'incident_number': incident_number,
-            'id': user_data.account,
+            'id': user_data.account
           })
           .success(function(data, status, headers, config) {
             console.log("helper insert successfully ");
@@ -1422,15 +1435,15 @@ angular.module('starter.controllers', [])
   initialize();
   $interval(initialize, 5000);
 
-  $scope.seeNotification = function(){
+  $scope.seeNotification = function() {
     var current_notification = $("#" + event.currentTarget.id + " h2.notificationCategory").text();
     var pageToGo = "";
 
-    if(current_notification == "ask help")
+    if (current_notification == "ask help")
       pageToGo = "app.map"
-    else if(current_notification == "ask match" || current_notification == "solved")
+    else if (current_notification == "ask match" || current_notification == "solved")
       pageToGo = "app.incidentHistory"
-    else if(current_notification == "matched" || current_notification == "rated")
+    else if (current_notification == "matched" || current_notification == "rated")
       pageToGo = "app.helpHistory"
 
     $ionicHistory.nextViewOptions({
