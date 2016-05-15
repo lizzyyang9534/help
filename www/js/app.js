@@ -4,6 +4,37 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
+function initPushwoosh()
+{
+    var pushNotification = cordova.require("pushwoosh-cordova-plugin.PushNotification");
+
+    //set push notifications handler
+    document.addEventListener('push-notification', function(event) {
+        var title = event.notification.title;
+        var userData = event.notification.userdata;
+
+        if(typeof(userData) != "undefined") {
+            console.warn('user data: ' + JSON.stringify(userData));
+        }
+
+        alert(title);
+    });
+
+    //initialize Pushwoosh with projectid: "GOOGLE_PROJECT_NUMBER", pw_appid : "PUSHWOOSH_APP_ID". This will trigger all pending push notifications on start.
+    pushNotification.onDeviceReady({ projectid: "731989352867", pw_appid : "A7528-D95F2" });
+
+    //register for pushes
+    pushNotification.registerDevice(
+        function(status) {
+            var pushToken = status;
+            console.warn('push token: ' + pushToken);
+        },
+        function(status) {
+            console.warn(JSON.stringify(['failed to register ', status]));
+        }
+    );
+}
+
 
 angular.module('starter', ['ionic', 'ionic.service.core', 'ngCordova', 'starter.controllers', 'ionic.service.push', 'ionic-material'])
 
@@ -22,6 +53,7 @@ angular.module('starter', ['ionic', 'ionic.service.core', 'ngCordova', 'starter.
       StatusBar.styleDefault();
     }
 
+    initPushwoosh();
 
     Ionic.io();
     var push = new Ionic.Push({

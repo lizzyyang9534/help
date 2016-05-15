@@ -10,7 +10,7 @@
       </ion-nav-buttons>
       <ion-nav-buttons side="right">
         <button ng-controller="NotificateCtrl" class="button button-clear icon ion-android-notifications" ng-click="notificate()"></button>
-        <div id="notification_icon" style="display:none">n</div>
+        <!--<div id="notification_icon" ng-controller="NotificateCtrl" ng-show="{{ new_notification }} == true">n</div>-->
         <button class="button button-clear icon ion-home" href="#/app/home" ng-click="home()"></button>
       </ion-nav-buttons>
     </ion-nav-bar>
@@ -23,10 +23,10 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item menu-close href="#/app/login">
+        <!--<ion-item menu-close href="#/app/login">
           Login
         </ion-item>
-        <!--
+
         <ion-item menu-close href="#/app/register">
           Register
         </ion-item>
@@ -39,25 +39,25 @@
           <i class="icon ion-map margin-right-10 font-size-22 color-B4E065"></i>
           幫幫你
         </ion-item>-->
-        <ion-item menu-close href="#/app/member" class="item-icon-left">
+        <ion-item menu-close href="#/app/member" class="item-icon-left margin-top-15">
           <i class="icon ion-clipboard margin-right-10 font-size-22 color-B4E065"></i>
-          會員資料
+          <span class="font-size-16 font-meiryo">會員資料</span>
         </ion-item>
         <ion-item menu-close href="#/app/incidentHistory" class="item-icon-left">
           <i class="icon ion-filing margin-right-10 font-size-22 color-B4E065"></i>
-          事件紀錄
+          <span class="font-size-16 font-meiryo">事件紀錄</span>
         </ion-item>
         <ion-item menu-close href="#/app/helpHistory" class="item-icon-left">
           <i class="icon ion-ios-flag margin-right-10 font-size-22 color-B4E065"></i>
-          拯救紀錄
+          <span class="font-size-16 font-meiryo">拯救紀錄</span>
         </ion-item>
         <ion-item menu-close href="#/app/shop" class="item-icon-left">
           <i class="icon ion-android-cart margin-right-10 font-size-22 color-B4E065"></i>
-          兌換折價券
+          <span class="font-size-16 font-meiryo">兌換折價券</span>
         </ion-item>
         <ion-item menu-close href="#/app/myCoupon" class="item-icon-left">
           <i class="icon ion-cash margin-right-10 font-size-22 color-B4E065"></i>
-          我的折價券
+          <span class="font-size-16 font-meiryo">我的折價券</span>
         </ion-item>
 
         <!--<button class="button button-clear button-stable" style="margin-top:60px" ngclick="logout()">

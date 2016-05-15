@@ -96,7 +96,9 @@ input.ng-dirty.ng-invalid {
   margin-bottom: 10px !important;
   width: 64%;
   border-radius: 25px !important;
-  font-size:50px;
+  font-size: 18px !important;
+  font-family: Meiryo, "微軟正黑體", "Microsoft JhengHei";
+  line-height: 47px;
 }
 .register_button {
   display: block;
@@ -369,6 +371,9 @@ input.ng-dirty.ng-invalid {
 .font-size-22 {
   font-size: 22px !important;
 }
+.font-size-24 {
+  font-size: 24px !important;
+}
 .font-size-25 {
   font-size: 25px !important;
 }
@@ -383,6 +388,9 @@ input.ng-dirty.ng-invalid {
 }
 .font-size-60 {
   font-size: 60px !important;
+}
+.font-meiryo{
+  font-family: "微軟正黑體", "Microsoft JhengHei";
 }
 .font-face-monospace{
   font-family: monospace !important;

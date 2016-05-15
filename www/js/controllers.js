@@ -475,17 +475,15 @@ angular.module('starter.controllers', [])
 
   $scope.doRefresh = function() {
     console.log('Refreshing!');
-    $timeout(function() {
-      $http.post(serverIP + "/api/getMemberData.php", {
-          'account': user_data.account
-        })
-        .success(function(data, status, headers, config) {
-          var new_user_data = data;
-          $localstorage.setObject('user_data', new_user_data);
-        })
-      $scope.initialize();
-      $scope.$broadcast('scroll.refreshComplete');
-    }, 1000);
+    $http.post(serverIP + "/api/getMemberData.php", {
+        'account': user_data.account
+      })
+      .success(function(data, status, headers, config) {
+        var new_user_data = data;
+        $localstorage.setObject('user_data', new_user_data);
+      })
+    $scope.initialize();
+    $scope.$broadcast('scroll.refreshComplete');
   }
 
   ionicMaterialInk.displayEffect();
@@ -557,105 +555,6 @@ angular.module('starter.controllers', [])
       });
     }
   }
-  ionicMaterialInk.displayEffect();
-})
-
-.controller('IncidentViewCtrl', function($scope, $http, $ionicPopup, $state, $localstorage, $window, ionicMaterialInk) {
-  var user_data = $localstorage.getObject('user_data');
-  $scope.rating = function(rating_option) {
-    var confirmPopup = $ionicPopup.confirm({
-      title: '確認評分',
-      template: "確定要送出評分給您的幫助者?",
-      cancelText: '取消',
-      okText: '確認'
-    });
-
-    confirmPopup.then(function(res) {
-      if (res) {
-        console.log('You are sure');
-        var num = $("#current_incident_number").text();
-        var helper = $("#current_incident_helper").text();
-        $http.post(serverIP + "/api/rating.php", {
-            'number': num,
-            'account': user_data.account,
-            'rating': rating_option,
-            'helper': helper
-          })
-          .success(function(data, status, headers, config) {
-            //console.log(data);
-            user_data.points = data;
-            var new_user_data = user_data;
-            //$localstorage.setObject('user_data', new_user_data);
-
-            $scope.closeIncident();
-            $window.location.reload(true);
-          })
-      } else
-        console.log('You are not sure');
-    });
-  }
-
-  $scope.cancelIncident = function() {
-    var confirmPopup = $ionicPopup.confirm({
-      title: '取消事件',
-      template: "確定要取消該事件?",
-      cancelText: '否',
-      okText: '是'
-    });
-
-    confirmPopup.then(function(res) {
-      if (res) {
-        console.log('You are sure');
-        var num = $("#current_incident_number").text();
-        $http.post(serverIP + "/api/cancelIncident.php", {
-            'number': num
-          })
-          .success(function(data, status, headers, config) {
-            console.log(data);
-
-            $scope.closeIncident();
-            $window.location.reload(true);
-          })
-      } else
-        console.log('You are not sure');
-    });
-  }
-
-  $scope.matchHelper = function() {
-    var choice = $("#helper_choice").text();
-    if (choice != "") {
-      var confirmPopup = $ionicPopup.confirm({
-        title: '與Helper配對',
-        template: "確定要讓" + choice + "協助您?",
-        cancelText: '否',
-        okText: '是'
-      });
-
-      confirmPopup.then(function(res) {
-        if (res) {
-          console.log('You are sure');
-          var num = $("#current_incident_number").text();
-          $http.post(serverIP + "/api/matchHelper.php", {
-              'number': num,
-              'account': user_data.account,
-              'helper': choice
-            })
-            .success(function(data, status, headers, config) {
-              console.log(data);
-
-              $scope.closeIncident();
-              //$window.location.reload(true);
-            })
-        } else
-          console.log('You are not sure');
-      });
-    } else {
-      $ionicPopup.alert({
-        title: "您尚未選擇Helper！"
-      });
-    }
-  }
-
   ionicMaterialInk.displayEffect();
 })
 
@@ -734,31 +633,78 @@ angular.module('starter.controllers', [])
     $("#" + event.currentTarget.id).addClass("active");
   }
 
-  $scope.doRefresh = function() {
-    console.log('Refreshing!');
-    $timeout(function() {
-      $http.post(serverIP + "/api/getMemberData.php", {
-          'account': user_data.account
-        })
-        .success(function(data, status, headers, config) {
-          var new_user_data = data;
-          $localstorage.setObject('user_data', new_user_data);
-        })
-      $scope.initialize();
-      $("div.tabs a").removeClass("active");
-      $("#incident_status_matching").addClass("active");
-      $scope.$broadcast('scroll.refreshComplete');
-    }, 1000);
-  }
-  ionicMaterialInk.displayEffect();
-})
+  $scope.matchHelper = function() {
+    var choice = $("#helper_choice").text();
+    if (choice != "") {
+      var confirmPopup = $ionicPopup.confirm({
+        title: '與Helper配對',
+        template: "確定要讓" + choice + "協助您?",
+        cancelText: '否',
+        okText: '是'
+      });
 
-.controller('HelpViewCtrl', function($scope, $http, $ionicPopup, $state, $localstorage, $window, ionicMaterialInk) {
-  var user_data = $localstorage.getObject('user_data');
-  $scope.solveIncident = function() {
+      confirmPopup.then(function(res) {
+        if (res) {
+          console.log('You are sure');
+          var num = $("#current_incident_number").text();
+          $http.post(serverIP + "/api/matchHelper.php", {
+              'number': num,
+              'account': user_data.account,
+              'helper': choice
+            })
+            .success(function(data, status, headers, config) {
+              console.log(data);
+
+              $scope.doRefresh();
+              $scope.closeIncident();
+            })
+        } else
+          console.log('You are not sure');
+      });
+    } else {
+      $ionicPopup.alert({
+        title: "您尚未選擇Helper！"
+      });
+    }
+  }
+
+  $scope.rating = function(rating_option) {
     var confirmPopup = $ionicPopup.confirm({
-      title: '完成事件',
-      template: "確定已完成該事件?",
+      title: '確認評分',
+      template: "確定要送出評分給您的幫助者?",
+      cancelText: '取消',
+      okText: '確認'
+    });
+
+    confirmPopup.then(function(res) {
+      if (res) {
+        console.log('You are sure');
+        var num = $("#current_incident_number").text();
+        var helper = $("#current_incident_helper").text();
+        $http.post(serverIP + "/api/rating.php", {
+            'number': num,
+            'account': user_data.account,
+            'rating': rating_option,
+            'helper': helper
+          })
+          .success(function(data, status, headers, config) {
+            //console.log(data);
+            user_data.points = data;
+            var new_user_data = user_data;
+            //$localstorage.setObject('user_data', new_user_data);
+
+            $scope.doRefresh();
+            $scope.closeIncident();
+          })
+      } else
+        console.log('You are not sure');
+    });
+  }
+
+  $scope.cancelIncident = function() {
+    var confirmPopup = $ionicPopup.confirm({
+      title: '取消事件',
+      template: "確定要取消該事件?",
       cancelText: '否',
       okText: '是'
     });
@@ -767,22 +713,35 @@ angular.module('starter.controllers', [])
       if (res) {
         console.log('You are sure');
         var num = $("#current_incident_number").text();
-        var asker = $("#current_incident_asker").text();
-        $http.post(serverIP + "/api/solveIncident.php", {
-            'number': num,
-            'account': user_data.account,
-            'asker': asker
+        $http.post(serverIP + "/api/cancelIncident.php", {
+            'number': num
           })
           .success(function(data, status, headers, config) {
             console.log(data);
 
+            $scope.doRefresh();
             $scope.closeIncident();
-            $window.location.reload(true);
           })
       } else
         console.log('You are not sure');
     });
   }
+
+  $scope.doRefresh = function() {
+    console.log('Refreshing!');
+    $http.post(serverIP + "/api/getMemberData.php", {
+        'account': user_data.account
+      })
+      .success(function(data, status, headers, config) {
+        var new_user_data = data;
+        $localstorage.setObject('user_data', new_user_data);
+      })
+    $scope.initialize();
+    $("div.tabs a").removeClass("active");
+    $("#incident_status_matching").addClass("active");
+    $scope.$broadcast('scroll.refreshComplete');
+  }
+  ionicMaterialInk.displayEffect();
 })
 
 .controller('HelpHistoryCtrl', function($scope, $http, $compile, $localstorage, $ionicPopup, ionicMaterialInk, $timeout) {
@@ -861,22 +820,50 @@ angular.module('starter.controllers', [])
     $("#" + event.currentTarget.id).addClass("active");
   }
 
+  $scope.solveIncident = function() {
+    var user_data = $localstorage.getObject('user_data');
+    var confirmPopup = $ionicPopup.confirm({
+      title: '完成事件',
+      template: "確定已完成該事件?",
+      cancelText: '否',
+      okText: '是'
+    });
+
+    confirmPopup.then(function(res) {
+      if (res) {
+        console.log('You are sure');
+        var num = $("#current_incident_number").text();
+        var asker = $("#current_incident_asker").text();
+        $http.post(serverIP + "/api/solveIncident.php", {
+            'number': num,
+            'account': user_data.account,
+            'asker': asker
+          })
+          .success(function(data, status, headers, config) {
+            console.log(data);
+
+            $scope.doRefresh();
+            $scope.closeHelp();
+          })
+      } else
+        console.log('You are not sure');
+    });
+  }
+
   $scope.doRefresh = function() {
-    $timeout(function() {
-      $http.post(serverIP + "/api/getMemberData.php", {
-          'account': user_data.account
-        })
-        .success(function(data, status, headers, config) {
-          var new_user_data = data;
-          //console.log(new_user_data);
-          $localstorage.setObject('user_data', new_user_data);
-          $scope.points = new_user_data.points;
-        })
-      $scope.initialize();
-      $("div.tabs a").removeClass("active");
-      $("#help_status_matching").addClass("active");
-      $scope.$broadcast('scroll.refreshComplete');
-    }, 1000);
+    $http.post(serverIP + "/api/getMemberData.php", {
+        'account': user_data.account
+      })
+      .success(function(data, status, headers, config) {
+        var new_user_data = data;
+        //console.log(new_user_data);
+        $localstorage.setObject('user_data', new_user_data);
+        $scope.points = new_user_data.points;
+      })
+    $scope.initialize();
+    $("div.tabs a").removeClass("active");
+    $("#help_status_matching").addClass("active");
+    $scope.$broadcast('scroll.refreshComplete');
   }
   ionicMaterialInk.displayEffect();
 })
@@ -1250,8 +1237,8 @@ angular.module('starter.controllers', [])
             hd = true;
           }
           var help_button = "<button ng-hide=\"" + hd + "\" class=\"help_button\" ng-click=\"helpcheck(" + num + ")\">HELP</button>";
-
-          var infoContent = "<div>" + '<h5>' + title + '</h5>' + '<i class="icon ion-chatbubble-working color-A8A8A8"> ' + illust + '</i>' + '<div>' + dt + status + '</div>' + help_button + "</div>";
+          var askerinfo_button = "<button class=\"icon ion-person\" ng-click=\"showAskerinfo(" + allLocation[i].ID + ")\"></button>";
+          var infoContent = "<div>" + '<h5>' + title + '</h5>' + '<i class="icon ion-chatbubble-working color-A8A8A8"> ' + illust + '</i>' + '<div>' + dt + status + '</div>' + help_button + askerinfo_button + "</div>";
           //compiled let ng-click works
           var infoCompiled = $compile(infoContent)($scope);
           //+ '<div ng-show="sw">已有人幫助</div>' + '<button class="help_button" ng-click="sw=true" >HELP</button>';
@@ -1316,6 +1303,31 @@ angular.module('starter.controllers', [])
       } else {
         console.log('否');
       }
+    });
+  }
+
+  $scope.showAskerinfo = function(askerinfo_id) {
+    /*$http.post(serverIP + "/api/addincident.php", {
+        'id': user_data.account,
+        'level': $scope.level,
+        'category': $scope.category,
+        'title': $scope.title,
+        'illust': $scope.illust,
+        'date': $scope.date,
+        'location': catchpos
+      })
+      .success(function(data, status, headers, config) {
+        $http.post(serverIP + "/api/addincidentNotification.php", {
+            'account': user_data.account
+          })
+          .success(function(data, status, headers, config) {
+            console.log(data);
+          })*/
+
+
+    var alertPopup = $ionicPopup.alert({
+      title: '求助市民資料',
+      template: 'It might taste good'
     });
   }
 
@@ -1428,15 +1440,18 @@ angular.module('starter.controllers', [])
   var notifications = [];
   notifications_amount = 0;
   var notification_list = [];
-  $scope.new_notification = true;
 
   function initialize() {
     /*if(notifications.length > notifications_amount){
-      console.log(notifications_amount);
-      $("#notification_icon").show();
+      //console.log(notifications_amount);
+      //$("#notification_icon").show();
+      $scope.new_notification = true;
+      //console.log($scope.new_notification);
       notifications_amount = notifications.length;
-      console.log(notifications.length + "," + notifications_amount);
-    }*/
+      //console.log(notifications.length + "," + notifications_amount);
+    }
+    else
+      $scope.new_notification = false;*/
     notifications = [];
     notification_list = [];
     $http.post(serverIP + "/api/getNotification.php", {
