@@ -500,51 +500,58 @@ angular.module('starter.controllers', [])
   });
 
   $scope.addincident = function() {
-    if ($scope.location == 'Current') {
+    if ($scope.addincident_form.$valid) {
+      /*if ($scope.location == 'Current') {
+        console.log("current:" + catchpos);
+      } else {
+        catchpos = $scope.location;
+        console.log("city:" + catchpos);
+      }*/
       console.log("current:" + catchpos);
-    } else {
-      catchpos = $scope.location;
-      console.log("city:" + catchpos);
-    }
-    console.log(catchpos);
-    $http.post(serverIP + "/api/addincident.php", {
-        'id': user_data.account,
-        'level': $scope.level,
-        'category': $scope.category,
-        'title': $scope.title,
-        'illust': $scope.illust,
-        'date': $scope.date,
-        'location': catchpos
-      })
-      .success(function(data, status, headers, config) {
-        $http.post(serverIP + "/api/addincidentNotification.php", {
-            'account': user_data.account,
-            
-          })
-          .success(function(data, status, headers, config) {
+      $http.post(serverIP + "/api/addincident.php", {
+          'id': user_data.account,
+          'level': $scope.level,
+          'category': $scope.category,
+          'title': $scope.title,
+          'illust': $scope.illust,
+          'date': $scope.date,
+          'location': catchpos
+        })
+        .success(function(data, status, headers, config) {
+          /*$http.post(serverIP + "/api/addincidentNotification.php", {
+              'account': user_data.account,
 
-          })
-        console.log("data insert successfully " + catchpos);
-        $scope.level = null;
-        $scope.category = null;
-        $scope.title = null;
-        $scope.illust = null;
-        $scope.date = null;
-        $scope.location = null;
-        $scope.addincident_form.$setPristine();
+            })
+            .success(function(data, status, headers, config) {
 
-        $ionicPopup.alert({
-          title: "新增事件成功！",
+            })*/
+          console.log("data insert successfully " + catchpos);
+          $scope.level = null;
+          $scope.category = null;
+          $scope.title = null;
+          $scope.illust = null;
+          $scope.date = null;
+          $scope.location = null;
+          $scope.addincident_form.$setPristine();
+
+          $ionicPopup.alert({
+            title: "新增事件成功！",
+          });
+          $ionicHistory.nextViewOptions({
+            disableBack: true
+          });
+          $state.go("app.map", {}, {
+            reload: true
+          }); //導到正確位置
         });
-        $ionicHistory.nextViewOptions({
-          disableBack: true
-        });
-        $state.go("app.map", {}, {
-          reload: true
-        }); //導到正確位置
+    }else {
+      // 未通過驗證
+      $ionicPopup.alert({
+        title: "請輸入完整資料！"
       });
+    }
   }
-  ionicMaterialInk.displayEffect();
+    ionicMaterialInk.displayEffect();
 })
 
 .controller('IncidentViewCtrl', function($scope, $http, $ionicPopup, $state, $localstorage, $window, ionicMaterialInk) {
@@ -564,7 +571,7 @@ angular.module('starter.controllers', [])
         var helper = $("#current_incident_helper").text();
         $http.post(serverIP + "/api/rating.php", {
             'number': num,
-            'account':user_data.account,
+            'account': user_data.account,
             'rating': rating_option,
             'helper': helper
           })
@@ -1185,7 +1192,7 @@ angular.module('starter.controllers', [])
           //console.log(allLocation[i].location);
 
           var loc = allLocation[i].location;
-          var title = allLocation[i].title;
+          //var title = allLocation[i].title;
           var illust = allLocation[i].illust;
           var num = allLocation[i].number;
           //console.log(allLocation[i].date);
@@ -1210,14 +1217,13 @@ angular.module('starter.controllers', [])
           //var anyhelper = "<p>"+allLocation[i].anyhelper+" helper</p>";
           /*var status = "<a ng-show = \"show\" >" + allLocation[i].status+ "</a>"
                         "<a ng-show = \"show=true\" > unsolved </a>";*/
-
-          var dt = '<br><i class="icon ion-calendar margin-right-10"> 截止時間:</i><br>' + allLocation[i].date;
-
-          var hd = false;
-          if (allLocation[i].status == 'unsolved') {
-            hd = true;
+          var title_icon = false;
+          if (allLocation[i].level == 'emergency') {
+            title_icon = true;
           }
-          var help_button = "<button ng-hide=\"" + hd + "\" class=\"help_button\" ng-click=\"helpcheck(" + num + ")\">HELP</button>";
+          var title = "<i ng-show=\"" + title_icon + "\" class=\"icon ion-android-alert color-E14F2B\"></i> " + allLocation[i].title;
+
+          var dt = '<br><i class="icon ion-calendar margin-right-10"> 截止時間</i><br>' + allLocation[i].date;
 
           var status = '';
           if (allLocation[i].status == 'no helper') {
@@ -1228,7 +1234,13 @@ angular.module('starter.controllers', [])
             status = '<br><i class="icon ion-android-contacts margin-right-10 color-FFDC00"> 解決中</i>';
           }
 
-          var infoContent = "<div>" + '<h5>' + title + '</h5>' + '<i class="icon ion-chatbubble-working color-A8A8A8"> ' + illust + '</i>' + dt + status + help_button + "</div>";
+          var hd = false;
+          if (allLocation[i].status == 'unsolved' || allLocation[i].ID == user_data.account) {
+            hd = true;
+          }
+          var help_button = "<button ng-hide=\"" + hd + "\" class=\"help_button\" ng-click=\"helpcheck(" + num + ")\">HELP</button>";
+
+          var infoContent = "<div>" + '<h5>' + title + '</h5>' + '<i class="icon ion-chatbubble-working color-A8A8A8"> ' + illust + '</i>' + '<div>' + dt + status + '</div>' + help_button + "</div>";
           //compiled let ng-click works
           var infoCompiled = $compile(infoContent)($scope);
           //+ '<div ng-show="sw">已有人幫助</div>' + '<button class="help_button" ng-click="sw=true" >HELP</button>';

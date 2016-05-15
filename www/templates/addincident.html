@@ -17,7 +17,7 @@
 							<option value="common" class="addincident_lv_co" selected="selected">Common</option>
 						</select>
 					</label>
-					<label class="item item-input item-select">
+					<!--<label class="item item-input item-select">
 						<i class="icon ion-more margin-right-10 text-align-center font-size-22"></i>
 						<div class="input-label" >種類</div>
 						<select ng-model="category" required>
@@ -25,7 +25,7 @@
 							<option value="trip">Trip</option>
 							<option value="eat">Eat</option>
 						</select>
-					</label>
+					</label>-->
 					<label class="item item-input">
 						<i class="icon ion-android-calendar margin-right-10 text-align-center font-size-22"></i>
 						<span class="input-label">期限</span>
@@ -43,19 +43,13 @@
 						<div class="width-150" ng-init="time=default_date;" formatted-time>
 							<input type="time" ng-model="time" required formatted-time>
 						</div>
-					</label> -->
-					<label class="item item-input item-select">
+					</label>
+					<label class="item item-input item-select" ng-hide="true" >
 						<div class="input-label">所在位置</div>
 							<select ng-model="location" required>
 								<option value="Current" selected="selected">使用您目前的位置</option>
-								<option value="Taipei">台北</option>
-								<option value="Taoyuan">桃園</option>
-								<option value="Hsinchu">新竹</option>
-								<option value="Taichung">台中</option>
-								<option value="Chiayi">嘉義</option>
-								<option value="Tainan">台南</option>
 							</select>
-					</label>
+					</label> -->
 					<!-- <div id="check" ng-class="{'alert':addincident_form.$error.required}" ng-show="addincident_form.$error.required">
 						欄位不可有空
 					</div>-->

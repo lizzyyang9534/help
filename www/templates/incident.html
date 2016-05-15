@@ -24,17 +24,13 @@
         <span class="input-label">重要程度</span> {{ incident.level }}
       </label>
       <label class="item item-input">
-        <i class="icon ion-more margin-right-10 text-align-center font-size-22"></i>
-        <span class="input-label">種類</span> {{ incident.category }}
-      </label>
-      <label class="item item-input">
         <i class="icon ion-android-calendar margin-right-10 text-align-center font-size-22"></i>
         <span class="input-label">期限</span> {{ incident.date }}
       </label>
       <label class="item item-input">
         <i class="icon ion-android-textsms margin-right-10 text-align-center font-size-22"></i>
         <span class="input-label">說明</span>
-        <div>{{ incident.illust }}</div>
+        <div class="white-space-normal">{{ incident.illust }}</div>
       </label>
       <label id="rating" class="item item-input" ng-show="incident.status == 'ask rating' || incident.status == 'solved'">
         <i class="icon ion-trophy margin-right-10 text-align-center font-size-22"></i>

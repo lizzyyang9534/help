@@ -48,6 +48,18 @@ input.ng-dirty.ng-invalid {
   text-align: center;
   line-height: 200px;
 }
+.logo_superman {
+  position: absolute;
+  top:0;
+  margin-top: 48%;
+  margin-bottom: 40%;
+  width: 200px;
+  height: 200px;
+  background-image: url("../img/supermandon2.gif");
+  background-position: center;
+  background-repeat: no-repeat;
+  line-height: 200px;
+}
 .login{
   margin: 0;
   bottom: 0;
@@ -472,9 +484,10 @@ input.ng-dirty.ng-invalid {
     height:93px;
     top:16%;
     left:500px;
+    background-image: url("../img/supermandon.gif");
     animation: spin 10s infinite linear;
     transform-origin: 290% 30px; /* 150px = path radius */
 }
-.box-shadow-0{
-  box-shadow: 0 !important;
+.white-space-normal{
+  white-space: normal !important;
 }
