@@ -113,6 +113,7 @@ angular.module('starter.controllers', [])
     $scope.modal5.show();
   };
   $scope.notificate = function() {
+    $("#notification_icon").hide();
     $scope.modal6.show();
   };
   $scope.incident = function() {
@@ -1425,9 +1426,17 @@ angular.module('starter.controllers', [])
 .controller('NotificateCtrl', function($scope, $ionicModal, $http, $state, $interval, $ionicHistory, $localstorage, ionicMaterialInk) {
   var user_data = $localstorage.getObject('user_data');
   var notifications = [];
+  notifications_amount = 0;
   var notification_list = [];
+  $scope.new_notification = true;
 
   function initialize() {
+    /*if(notifications.length > notifications_amount){
+      console.log(notifications_amount);
+      $("#notification_icon").show();
+      notifications_amount = notifications.length;
+      console.log(notifications.length + "," + notifications_amount);
+    }*/
     notifications = [];
     notification_list = [];
     $http.post(serverIP + "/api/getNotification.php", {
