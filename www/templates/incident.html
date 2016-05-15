@@ -50,8 +50,8 @@
         <ion-radio name="helper_choice" ng-model="data.choice" ng-value="helper.value" ng-repeat="helper in helpers_list">{{ helper.text }}</ion-radio>
       </ion-list>
       <div id="helper_choice" style="display: none">{{ data.choice }}</div>
-      <input type="button" value="取消事件" class="button button-calm login_button background-43A143" ng-show="incident.status == 'no helper'" ng-click="cancelIncident()">
       <input type="button" value="與Helper配對" class="button button-calm login_button background-43A143" ng-show="incident.status == 'matching'" ng-click="matchHelper()">
+      <input type="button" value="取消事件" class="button button-calm login_button background-E14F2B" ng-hide="incident.status == 'ask rating' || incident.status == 'solved'" ng-click="cancelIncident()">    
     </div>
   </ion-content>
 </ion-modal-view>

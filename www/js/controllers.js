@@ -298,11 +298,17 @@ angular.module('starter.controllers', [])
     }, function(error) {
       alert('Unable to get location: ' + error.message);
     });
+    $ionicHistory.nextViewOptions({
+      disableBack: true
+    });
     $state.go("app.map");
 
   }
 
   $scope.helpOthers = function() {
+    $ionicHistory.nextViewOptions({
+      disableBack: true
+    });
     $state.go("app.map");
 
   }
@@ -518,13 +524,12 @@ angular.module('starter.controllers', [])
           'location': catchpos
         })
         .success(function(data, status, headers, config) {
-          /*$http.post(serverIP + "/api/addincidentNotification.php", {
-              'account': user_data.account,
-
+          $http.post(serverIP + "/api/addincidentNotification.php", {
+              'account': user_data.account
             })
             .success(function(data, status, headers, config) {
-
-            })*/
+              console.log(data);
+            })
           console.log("data insert successfully " + catchpos);
           $scope.level = null;
           $scope.category = null;
@@ -544,14 +549,14 @@ angular.module('starter.controllers', [])
             reload: true
           }); //導到正確位置
         });
-    }else {
+    } else {
       // 未通過驗證
       $ionicPopup.alert({
         title: "請輸入完整資料！"
       });
     }
   }
-    ionicMaterialInk.displayEffect();
+  ionicMaterialInk.displayEffect();
 })
 
 .controller('IncidentViewCtrl', function($scope, $http, $ionicPopup, $state, $localstorage, $window, ionicMaterialInk) {
@@ -617,31 +622,37 @@ angular.module('starter.controllers', [])
 
   $scope.matchHelper = function() {
     var choice = $("#helper_choice").text();
-    var confirmPopup = $ionicPopup.confirm({
-      title: '與Helper配對',
-      template: "確定要讓" + choice + "協助您?",
-      cancelText: '否',
-      okText: '是'
-    });
+    if (choice != "") {
+      var confirmPopup = $ionicPopup.confirm({
+        title: '與Helper配對',
+        template: "確定要讓" + choice + "協助您?",
+        cancelText: '否',
+        okText: '是'
+      });
 
-    confirmPopup.then(function(res) {
-      if (res) {
-        console.log('You are sure');
-        var num = $("#current_incident_number").text();
-        $http.post(serverIP + "/api/matchHelper.php", {
-            'number': num,
-            'account': user_data.account,
-            'helper': choice
-          })
-          .success(function(data, status, headers, config) {
-            console.log(data);
+      confirmPopup.then(function(res) {
+        if (res) {
+          console.log('You are sure');
+          var num = $("#current_incident_number").text();
+          $http.post(serverIP + "/api/matchHelper.php", {
+              'number': num,
+              'account': user_data.account,
+              'helper': choice
+            })
+            .success(function(data, status, headers, config) {
+              console.log(data);
 
-            $scope.closeIncident();
-            //$window.location.reload(true);
-          })
-      } else
-        console.log('You are not sure');
-    });
+              $scope.closeIncident();
+              //$window.location.reload(true);
+            })
+        } else
+          console.log('You are not sure');
+      });
+    } else {
+      $ionicPopup.alert({
+        title: "您尚未選擇Helper！"
+      });
+    }
   }
 
   ionicMaterialInk.displayEffect();
@@ -1132,6 +1143,7 @@ angular.module('starter.controllers', [])
   //var distance;
   var initialLocation;
   var browserSupportFlag = new Boolean();
+  var icontype;
   var p1 = new google.maps.LatLng(45.463688, 9.18814);
   var p2 = new google.maps.LatLng(46.0438317, 9.75936230000002);
   $scope.initialize = function() {
@@ -1164,20 +1176,12 @@ angular.module('starter.controllers', [])
       handleNoGeolocation(browserSupportFlag);
     }
 
-
-    //Marker + infowindow + angularjs compiled ng-click
-
-
-
-    var marker = new google.maps.Marker({
-      position: initialLocation,
-      map: map
-        //icon: cicon,
-    });
-
     var infowindow = new google.maps.InfoWindow({
       content: ''
     });
+
+
+
 
     //alert(calcDistance(p1, p2)); ccccccccccccccccccccccccccccccccccccc
 
@@ -1196,9 +1200,15 @@ angular.module('starter.controllers', [])
           var illust = allLocation[i].illust;
           var num = allLocation[i].number;
           //console.log(allLocation[i].date);
-          var icon = {
 
-            url: "img/emergency_marker.png", // url
+          if (allLocation[i].level == 'emergency') {
+            icontype = "img/emergency_marker.png"
+          } else if (allLocation[i].level == 'common') {
+            icontype = "img/common_marker.png"
+          }
+
+          var icon = {
+            url: icontype, // url
             scaledSize: new google.maps.Size(45, 45), // scaled size
             origin: new google.maps.Point(0, 0), // origin
             anchor: new google.maps.Point(0, 0) // anchor
@@ -1295,7 +1305,7 @@ angular.module('starter.controllers', [])
             'id': user_data.account
           })
           .success(function(data, status, headers, config) {
-            console.log("helper insert successfully ");
+            console.log(data);
           });
 
         $ionicPopup.alert({
@@ -1435,6 +1445,17 @@ angular.module('starter.controllers', [])
           notification.incident_number = allNotification[i].incident_number;
           notification.sender_account = allNotification[i].sender_account;
 
+          if (notification.category == "ask help")
+            notification.title = "求救";
+          else if (notification.category == "ask match")
+            notification.title = "配對請求";
+          else if (notification.category == "solved")
+            notification.title = "完成事件";
+          else if (notification.category == "matched")
+            notification.title = "配對完成";
+          else if (notification.category == "rated")
+            notification.title = "獲得積分";
+
           notifications.push(notification);
         }
 
@@ -1448,15 +1469,19 @@ angular.module('starter.controllers', [])
   $interval(initialize, 5000);
 
   $scope.seeNotification = function() {
-    var current_notification = $("#" + event.currentTarget.id + " h2.notificationCategory").text();
+    var current_notification = $("#" + event.currentTarget.id + " span.notificationCategory").text();
     var pageToGo = "";
 
     if (current_notification == "ask help")
-      pageToGo = "app.map"
-    else if (current_notification == "ask match" || current_notification == "solved")
-      pageToGo = "app.incidentHistory"
-    else if (current_notification == "matched" || current_notification == "rated")
-      pageToGo = "app.helpHistory"
+      pageToGo = "app.map";
+    else if (current_notification == "ask match")
+      pageToGo = "app.incidentHistory";
+    else if (current_notification == "solved")
+      pageToGo = "app.incidentHistory";
+    else if (current_notification == "matched")
+      pageToGo = "app.helpHistory";
+    else if (current_notification == "rated")
+      pageToGo = "app.helpHistory";
 
     $ionicHistory.nextViewOptions({
       disableBack: true

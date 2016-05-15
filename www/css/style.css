@@ -286,6 +286,9 @@ input.ng-dirty.ng-invalid {
 .padding-left-16{
   padding-left: 16px !important;
 }
+.padding-left-65{
+  padding-left: 65px !important;
+}
 .padding-right-0{
   padding-right: 0 !important;
 }
@@ -462,6 +465,9 @@ input.ng-dirty.ng-invalid {
 }
 .background-FF57DE{
   background: #FF57DE !important;
+}
+.background-E14F2B{
+	background: #E14F2B !important;
 }
 .background-color-transparent{
 	background-color: transparent !important;

@@ -19,10 +19,11 @@
           <span>主題:<a>oh my god</a></span>
         </div>
   	  </ion-item>--->
-        <a id="notification{{ notification.id }}" class="item item-avatar" ng-repeat="notification in notification_list" ng-click="seeNotification()">
+        <a id="notification{{ notification.id }}" class="item item-avatar padding-left-65" ng-repeat="notification in notification_list" ng-click="seeNotification()">
           <img src="./img/material4.jpg">
-          <h2 class="notificationCategory">{{ notification.category }}</h2>
+          <h2>{{ notification.title }}</h2>
           <p>{{ notification.content }}</p>
+          <span class="notificationCategory" style="display:none">{{ notification.category }}</span>
         </a>
       </ion-list>
     </ion-content>
