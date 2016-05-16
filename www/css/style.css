@@ -96,7 +96,7 @@ input.ng-dirty.ng-invalid {
   margin-bottom: 10px !important;
   width: 64%;
   border-radius: 25px !important;
-  font-size: 18px !important;
+  font-size: 22px !important;
   font-family: Meiryo, "微軟正黑體", "Microsoft JhengHei";
   line-height: 47px;
 }
@@ -117,6 +117,8 @@ input.ng-dirty.ng-invalid {
   margin: 0 15% !important;
   margin-top: 15px !important;
   border-radius: 25px !important;
+  font-size: 22px !important;
+  font-family: Meiryo, "微軟正黑體", "Microsoft JhengHei";
 }
 .login_input{
   margin-left: 5% !important;

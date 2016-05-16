@@ -21,7 +21,7 @@ angular.module('starter.controllers', [])
 
 .value('mapp', 'yoyoimmappoutside')
 
-.controller('AppCtrl', function($scope, $ionicModal, $ionicPopup, $timeout, $http, $state, $ionicHistory, $localstorage, API, ionicMaterialInk, mapp, $compile) {
+.controller('AppCtrl', function($scope, $ionicModal, $ionicPopup, $timeout, $http, $state, $ionicHistory, $localstorage, API, ionicMaterialInk, mapp, $compile, user_data) {
   //mapp='yoyoimmapp';
   console.log(mapp);
   // With the new view caching in Ionic, Controllers are only called
@@ -110,6 +110,7 @@ angular.module('starter.controllers', [])
     $scope.modal2.show();
   };
   $scope.editMember = function() {
+    $scope.user = user_data.getData();
     $scope.modal5.show();
   };
   $scope.notificate = function() {
@@ -183,7 +184,7 @@ angular.module('starter.controllers', [])
             //console.log('Doing login', $scope.loginData);
             //console.log(data);
             $scope.user = data;
-
+            user_data.Update(data);
             if (data == "error") {
               $ionicPopup.alert({
                 title: "無法登入",
@@ -196,16 +197,10 @@ angular.module('starter.controllers', [])
                 name: $scope.user.name,
                 cellphone: $scope.user.cellphone,
                 email: $scope.user.email,
-                //location: $scope.user.location,
                 contact_name: $scope.user.contact_name,
                 contact_cel: $scope.user.contact_cel,
                 points: $scope.user.points
               });
-
-              //console.log($localstorage.get('user_data'));
-              /*$ionicPopup.alert({
-                title: "登入成功"
-              });*/
 
               $ionicHistory.nextViewOptions({
                 disableBack: true
@@ -245,28 +240,7 @@ angular.module('starter.controllers', [])
   }
 
   $ionicHistory.clearHistory();
-  /*
-    $ionicPlatform.onHardwareBackButton(function() {
-      if ($location.path() === "/app/home") {
-        var confirmPopup = $ionicPopup.confirm({
-          title: 'withU',
-          template: "是否確定要離開應用程式?",
-          cancelText: '取消',
-          okText: '確定'
-        });
 
-        confirmPopup.then(function(res) {
-          if (res) {
-            console.log('You are sure');
-            ionic.Platform.exitApp();
-          } else
-            console.log('You are not sure');
-        });
-      } else {
-        $ionicHistory.goBack();
-      }
-    }, 100);
-  */
   $scope.helpMe = function() {
     $ionicHistory.nextViewOptions({
       disableBack: true
@@ -426,44 +400,28 @@ angular.module('starter.controllers', [])
   var user_data = $localstorage.getObject('user_data');
   $scope.initialize = function() {
     var user_data = $localstorage.getObject('user_data');
-    $scope.account = user_data.account;
-    $scope.password = user_data.password;
-    $scope.name = user_data.name;
-    $scope.cellphone = user_data.cellphone;
-    $scope.email = user_data.email;
-    $scope.contact_name = user_data.contact_name;
-    $scope.contact_cel = user_data.contact_cel;
-
-    $scope.account_edit = user_data.account;
-    $scope.passwd_edit = user_data.password;
-    $scope.name_edit = user_data.name;
-    $scope.cel_edit = user_data.cellphone;
-    $scope.email_edit = user_data.email;
-    $scope.contact_name_edit = user_data.contact_name;
-    $scope.contact_cel_edit = user_data.contact_cel;
+    $scope.user = user_data;
+    console.log($scope.user);
   }
-  $scope.initialize();
 
   $scope.updateData = function() {
     if ($scope.edit_form.$valid) {
       //console.log($scope.contact_name_edit + "," + $scope.contact_cel_edit);
       // 通過驗證
       $http.post(serverIP + "/api/editMember.php", {
-          'account': $scope.account_edit,
-          'passwd': $scope.passwd_edit,
-          'name': $scope.name_edit,
-          'cel': $scope.cel_edit,
-          'email': $scope.email_edit,
-          'contact_name': $scope.contact_name_edit,
-          'contact_cel': $scope.contact_cel_edit
+          'account': $scope.user.account,
+          'passwd': $scope.user.password,
+          'name': $scope.user.name,
+          'cel': $scope.user.cellphone,
+          'email': $scope.user.email,
+          'contact_name': $scope.user.contact_name,
+          'contact_cel': $scope.user.contact_cel
         })
         .success(function(data, status, headers, config) {
           var new_user_data = data;
-          console.log(new_user_data);
-
           $localstorage.setObject('user_data', new_user_data);
           $scope.closeEditMember();
-          $scope.doRefresh();
+          $scope.initialize();
         });
     } else {
       // 未通過驗證
@@ -480,7 +438,10 @@ angular.module('starter.controllers', [])
       })
       .success(function(data, status, headers, config) {
         var new_user_data = data;
+        console.log(new_user_data);
+        //$scope.user.name = data.name;
         $localstorage.setObject('user_data', new_user_data);
+        user_data.Update(new_user_data);
       })
     $scope.initialize();
     $scope.$broadcast('scroll.refreshComplete');
@@ -679,8 +640,10 @@ angular.module('starter.controllers', [])
     confirmPopup.then(function(res) {
       if (res) {
         console.log('You are sure');
+
         var num = $("#current_incident_number").text();
         var helper = $("#current_incident_helper").text();
+        console.log(num, user_data.account, rating_option, helper);
         $http.post(serverIP + "/api/rating.php", {
             'number': num,
             'account': user_data.account,
@@ -688,7 +651,7 @@ angular.module('starter.controllers', [])
             'helper': helper
           })
           .success(function(data, status, headers, config) {
-            //console.log(data);
+            console.log(data);
             user_data.points = data;
             var new_user_data = user_data;
             //$localstorage.setObject('user_data', new_user_data);
@@ -1307,14 +1270,8 @@ angular.module('starter.controllers', [])
   }
 
   $scope.showAskerinfo = function(askerinfo_id) {
-    /*$http.post(serverIP + "/api/addincident.php", {
-        'id': user_data.account,
-        'level': $scope.level,
-        'category': $scope.category,
-        'title': $scope.title,
-        'illust': $scope.illust,
-        'date': $scope.date,
-        'location': catchpos
+  /*  $http.post(serverIP + "/api/member.php", {
+        'account': askerinfo_id
       })
       .success(function(data, status, headers, config) {
         $http.post(serverIP + "/api/addincidentNotification.php", {
@@ -1322,13 +1279,13 @@ angular.module('starter.controllers', [])
           })
           .success(function(data, status, headers, config) {
             console.log(data);
-          })*/
 
-
-    var alertPopup = $ionicPopup.alert({
-      title: '求助市民資料',
-      template: 'It might taste good'
-    });
+            var alertPopup = $ionicPopup.alert({
+              title: '求助市民資料',
+              template: 'It might taste good'
+            });
+          })
+      })*/
   }
 
   $scope.centerOnMe = function() {

@@ -14,12 +14,12 @@
           <label class="item item-input">
             <i class="icon ion-android-contact margin-right-10 text-align-center"></i>
             <span class="input-label">帳號</span>
-            <input type="text" id="account_edit" name="account_edit" ng-model="account_edit" class="background-none" ng-disabled="true">
+            <input type="text" id="account_edit" name="account_edit" ng-model="user.account" class="background-none" ng-disabled="true">
           </label>
           <label class="item item-input">
             <i class="icon ion-locked margin-right-10 text-align-center"></i>
             <span class="input-label">密碼</span>
-            <input type="password" id="passwd_edit" name="passwd_edit" ng-model="passwd_edit" pw-account-check="account_edit" placeholder="密碼" required ng-minlength="8" ng-maxlength="20">
+            <input type="password" id="passwd_edit" name="passwd_edit" ng-model="user.password" pw-account-check="account_edit" placeholder="密碼" required ng-minlength="8" ng-maxlength="20">
           </label>
           <label class="item item-input">
             <i class="icon ion-checkmark-circled margin-right-10 text-align-center"></i>
@@ -29,27 +29,27 @@
           <label class="item item-input">
             <i class="icon ion-android-person margin-right-10 text-align-center"></i>
             <span class="input-label">姓名</span>
-            <input type="text" name="name_edit" ng-model="name_edit" required>
-          </label>
+            <input type="text" name="name_edit" ng-model="user.name" required>
+          </label>{{ name_edit }}
           <label class="item item-input">
             <i class="icon ion-iphone margin-right-10 text-align-center"></i>
             <span class="input-label">手機</span>
-            <input type="text" ng-model="cel_edit">
+            <input type="text" ng-model="user.cellphone">
           </label>
           <label class="item item-input">
             <i class="icon ion-email margin-right-10 text-align-center"></i>
             <span class="input-label">Email</span>
-            <input type="email" name="email_edit" ng-model="email_edit" required>
+            <input type="email" name="email_edit" ng-model="user.email" required>
           </label>
           <label class="item item-input">
             <i class="icon ion-android-person margin-right-10 text-align-center"></i>
             <span class="input-label">緊急聯絡人姓名</span>
-            <input type="text" name="contact_name_edit" ng-model="contact_name_edit" placeholder="聯絡人姓名" required>
+            <input type="text" name="contact_name_edit" ng-model="user.contact_name" placeholder="聯絡人姓名" required>
           </label>
           <label class="item item-input">
             <i class="icon ion-iphone margin-right-10 text-align-center"></i>
             <span class="input-label">緊急聯絡人電話</span>
-            <input type="text" name="contact_cel_edit" ng-model="contact_cel_edit" placeholder="聯絡人電話" required>
+            <input type="text" name="contact_cel_edit" ng-model="user.contact_cel" placeholder="聯絡人電話" required>
           </label>
 
           <div class="alert" ng-show="edit_form.account_edit.$dirty && edit_form.passwd_edit.$dirty && edit_form.name.$dirty && edit_form.email.$dirty">

@@ -36,7 +36,7 @@ function initPushwoosh()
 }
 
 
-angular.module('starter', ['ionic', 'ionic.service.core', 'ngCordova', 'starter.controllers', 'ionic.service.push', 'ionic-material'])
+angular.module('starter', ['ionic', 'ionic.service.core', 'ngCordova', 'starter.controllers', 'ionic.service.push', 'ionic-material', 'starter.services_user'])
 
 .run(function($ionicPlatform) {
   console.log(ionic.Platform.isAndroid());
